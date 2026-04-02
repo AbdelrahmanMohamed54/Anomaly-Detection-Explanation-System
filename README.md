@@ -243,5 +243,5 @@ This project is inspired by real manufacturing data engineering work at HORSCH M
 ## Author
 
 **Abdelrahman Mohamed** — AI Engineer  
-[LinkedIn](https://linkedin.com/in/abdelrahman-mohamed) · [GitHub](https://github.com/AbdelrahmanMohamed54)  
+[LinkedIn](https://linkedin.com/in/abdelrahman-25-mohamed) · [GitHub](https://github.com/AbdelrahmanMohamed54)  
 abdelrahman.mohamed2505@gmail.com
