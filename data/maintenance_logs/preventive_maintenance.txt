@@ -1,0 +1,118 @@
+PREVENTIVE MAINTENANCE LOG — PM-2024-0108
+Date: 2024-01-08 | Equipment: PUMP_01, PUMP_02 | Technician: K. Bauer
+Task: Monthly vibration survey and lubrication check
+
+Carried out routine monthly vibration survey on PUMP_01 and PUMP_02 using a CSI 2140 analyser. PUMP_01 drive-end bearing vibration: 0.22 mm/s (baseline), non-drive-end: 0.18 mm/s — both within normal limits. PUMP_02 readings: 0.24 mm/s and 0.21 mm/s respectively. No spectral anomalies detected.
+
+Lubrication: Checked grease nipples on both units — all accessible without disassembly. PUMP_01 received 15 g Mobilith SHC 460 per re-lubrication procedure. PUMP_02 grease appeared in good condition; no re-lubrication required at this interval. Recorded in CMMS.
+
+Observations: PUMP_01 bearing temperature slightly elevated at 72°C compared to previous month's 68°C — within limits but to be monitored. No unusual noise or vibration during run-up. Both units returned to service with no action items pending.
+
+Next PM due: 2024-02-08
+
+
+PREVENTIVE MAINTENANCE LOG — PM-2024-0120
+Date: 2024-01-20 | Equipment: MOTOR_01, MOTOR_02 | Technician: S. Mitchell
+Task: Quarterly motor inspection and electrical checks
+
+Performed quarterly motor inspection on MOTOR_01 and MOTOR_02. Visual inspection of motor frames, terminal boxes, and cooling fan guards completed — no damage, corrosion, or foreign body ingress found. Cooling fan guards on MOTOR_01 cleaned of dust accumulation (approximately 3 mm layer on guard vanes).
+
+Electrical checks: Insulation resistance tested on both motors using a Fluke 1550C megohmmeter at 1,000V DC. MOTOR_01: 980 MΩ (acceptable >100 MΩ). MOTOR_02: 1,150 MΩ. Winding resistance balance across three phases within 1% on both motors. Phase current measured under load: MOTOR_01 L1=13.4 A, L2=13.5 A, L3=13.3 A — balanced. MOTOR_02 L1=13.8 A, L2=13.7 A, L3=13.9 A — balanced.
+
+No defects found. All results recorded in CMMS. Next quarterly inspection due: 2024-04-20.
+
+
+PREVENTIVE MAINTENANCE LOG — PM-2024-0205
+Date: 2024-02-05 | Equipment: PUMP_03 | Technician: J. Kowalski
+Task: 6-month mechanical inspection
+
+Six-month mechanical inspection of PUMP_03. Pump isolated under permit-to-work (PTW-2024-0072). Coupling guard removed and coupling alignment checked using a digital dial gauge: angular misalignment 0.04 mm, offset 0.02 mm — within specification of <0.05 mm. Coupling spider element inspected: no delamination or cracking.
+
+Mechanical seals inspected — seal face leakage within acceptable limit (<10 drops/min). Gland packing tightened slightly on outboard seal. Suction and discharge valve handwheels exercised through full travel — no stiffness detected. Strainer basket removed and found clean (last cleaned 6 weeks ago). Basket reinstalled with new gasket.
+
+Observations: No deficiencies found. Pump is in good mechanical condition. Next 6-month inspection due: 2024-08-05.
+
+
+PREVENTIVE MAINTENANCE LOG — PM-2024-0318
+Date: 2024-03-18 | Equipment: All pumps and motors | Technician: A. Farouk
+Task: Annual thermographic survey
+
+Conducted annual infrared thermographic survey of all five pump and motor units, plus the MCC panel, using a FLIR T840 camera. Ambient temperature: 22°C. All units at normal operating load during survey.
+
+PUMP_01: Drive-end bearing housing 74°C, motor body 68°C — normal. PUMP_02: All temperatures within 5°C of PUMP_01 — normal. PUMP_03: Motor terminal box 61°C — slightly elevated compared to 54°C at last survey; terminal box opened and connections found slightly loose. Tightened to specified torque. MOTOR_01: Bearing housings 69°C and 65°C — normal. MOTOR_02: All normal.
+
+MCC panel: L2 bus bar connection on MOTOR_02 feeder identified as a hot spot at 84°C vs. ambient 22°C (ΔT = 62°C — requires action at >40°C). Logged as corrective work order CW-2024-0312. No other anomalies.
+
+Next annual survey due: 2025-03-18.
+
+
+PREVENTIVE MAINTENANCE LOG — PM-2024-0410
+Date: 2024-04-10 | Equipment: PUMP_01 | Technician: M. Gonzalez
+Task: Strainer cleaning and inlet inspection
+
+Cleaned PUMP_01 inlet strainer basket. Differential pressure across strainer had been reading 0.18 bar, approaching the 0.25 bar alarm setpoint. Basket removed — found approximately 40% blocked with calcium carbonate scale deposits. Basket soaked in 10% citric acid solution for 30 minutes and rinsed with clean water. Post-cleaning DP: 0.03 bar.
+
+Suction pipe inspected through strainer access port — no visible corrosion or scaling inside the suction pipe bore. Strainer housing O-ring replaced as a preventive measure (original appeared flattened). Reassembled and leak checked — no leakage at strainer flange joints.
+
+Observations: Scale buildup rate has increased compared to the previous quarter. Recommended increasing cleaning frequency to monthly. Water softening dosing rate to be reviewed with process engineering. No further action at this time.
+
+
+PREVENTIVE MAINTENANCE LOG — PM-2024-0502
+Date: 2024-05-02 | Equipment: MOTOR_01, MOTOR_02 | Technician: Y. Tanaka
+Task: VFD inspection and DC bus health check
+
+Performed 6-monthly VFD health check on MOTOR_01 and MOTOR_02 drives. VFD enclosures opened and internal components inspected. Both units cleaned using dry compressed air — moderate dust accumulation removed from heat sinks and fan assemblies. Cooling fans checked for free rotation and vibration-free operation.
+
+DC bus capacitor health: MOTOR_01 VFD DC bus ESR measured at 0.12 Ω (limit: 0.20 Ω) — acceptable. DC bus capacitance measured at 4,580 µF (rated: 4,700 µF, limit: 80% of rating = 3,760 µF) — acceptable. MOTOR_02 VFD DC bus ESR: 0.10 Ω, capacitance: 4,650 µF — acceptable.
+
+IGBT gate driver board voltages checked on both drives — within ±2% of specification. VFD parameter settings verified against commissioning records. No faults in event logs. Both drives in satisfactory condition. Next health check due: 2024-11-02.
+
+
+PREVENTIVE MAINTENANCE LOG — PM-2024-0615
+Date: 2024-06-15 | Equipment: PUMP_02, PUMP_03 | Technician: L. Dubois
+Task: Mechanical seal inspection and coupling check
+
+Six-month mechanical seal inspection on PUMP_02 and PUMP_03. PUMP_02 seal: Face leakage 6 drops/min (limit: 10 drops/min) — acceptable. Seal flush pressure 0.8 bar above stuffing box pressure — correct. No crystalline deposits on seal gland plate.
+
+PUMP_03 seal: Face leakage 2 drops/min — well within limit. Seal flush flow verified at 0.5 L/min. Flushing fluid sample taken — appears clean, no product contamination of seal flush.
+
+Coupling checks: Both couplings inspected with coupling guards removed under PTW. PUMP_02 coupling alignment checked — 0.03 mm angular, 0.01 mm offset — excellent. Spider element in good condition. PUMP_03 coupling alignment 0.05 mm angular — at the upper limit; to be monitored at next PM. Coupling bolts torqued to specification.
+
+Both units returned to service. No corrective actions required.
+
+
+PREVENTIVE MAINTENANCE LOG — PM-2024-0722
+Date: 2024-07-22 | Equipment: All units | Technician: P. Ferreira
+Task: Monthly vibration survey — all equipment
+
+Monthly vibration survey, all five pump-motor units. Readings taken at each bearing housing in three axes using hand-held CSI 2140 analyser.
+
+PUMP_01: DE 0.23 mm/s, NDE 0.20 mm/s — normal, slight increase from last month on DE. PUMP_02: DE 0.25 mm/s, NDE 0.21 mm/s — normal. PUMP_03: DE 0.26 mm/s, NDE 0.23 mm/s — flagged for trending; coupling-end slightly elevated. MOTOR_01: DE 0.22 mm/s, NDE 0.19 mm/s — normal. MOTOR_02: DE 0.24 mm/s, NDE 0.20 mm/s — normal.
+
+No spectral anomalies found on any unit. PUMP_03 vibration increase noted and to be trended — spectrum shows no discrete fault frequencies. Possible slight misalignment developing; recommend laser alignment check at next 6-month PM.
+
+All results entered into CMMS vibration trend database.
+
+
+PREVENTIVE MAINTENANCE LOG — PM-2024-0815
+Date: 2024-08-15 | Equipment: PUMP_01, MOTOR_01 | Technician: I. Larsson
+Task: Annual bearing replacement — predictive trigger
+
+Based on vibration trending data showing progressive increase over 6 months on PUMP_01 drive-end bearing, and a motor hours count of 24,800 hours on MOTOR_01 approaching the bearing replacement threshold of 25,000 hours, both units scheduled for planned bearing replacement during the August planned shutdown window.
+
+PUMP_01 DE bearing removed — condition assessment: moderate outer race fatigue (early-stage scoring, no spalling). Replacement with SKF 6311-2RS1. MOTOR_01 DE and NDE bearings replaced with NSK 6208DDU. All bearing fits checked with gauges — within tolerance.
+
+Post-replacement commissioning: PUMP_01 vibration DE 0.18 mm/s — improved from 0.38 mm/s pre-replacement. MOTOR_01 DE 0.17 mm/s, NDE 0.15 mm/s. Both units performing well within all parameters.
+
+
+PREVENTIVE MAINTENANCE LOG — PM-2024-0930
+Date: 2024-09-30 | Equipment: All units | Technician: C. Reyes
+Task: Q3 comprehensive inspection — lubrication, alignment, electrical
+
+End-of-quarter comprehensive PM covering lubrication, alignment, and electrical checks across all five units. Re-lubrication completed per schedule: PUMP_01 and PUMP_03 received bearing re-lubrication (15 g Mobilith SHC 460 each). PUMP_02 interval not yet due. Both motors received grease top-up per motor manufacturer's 3-month schedule.
+
+Alignment spot-check on PUMP_03 (elevated vibration noted in July survey): laser alignment measurement found angular misalignment of 0.12 mm — outside tolerance of 0.05 mm. Shaft realigned to within 0.02 mm. Vibration rechecked post-alignment: DE 0.20 mm/s — returned to baseline.
+
+Electrical: Phase current check on all motors — all within 5% balance. Thermal relay settings verified against motor nameplates — all correct. PTW closed and all units returned to service.
+
+Next comprehensive PM due: Q4 2024.

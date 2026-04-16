@@ -1,0 +1,98 @@
+INCIDENT REPORT — INC-2024-0215
+Date: 2024-02-15 | Equipment: PUMP_01 | Type: Pressure Drop
+Severity: MEDIUM | Reported by: T. Richter | Duration: 1.5 hours
+
+Summary:
+PUMP_01 process pressure fell from 5.1 bar to 2.3 bar over approximately 15 minutes, triggering the low-pressure alarm at 08:34. The flow rate simultaneously dropped by 38%, indicating a restriction on the suction side. The pump was not tripped automatically as pressure remained above the 1.8 bar low-low trip setpoint, but the control room operator initiated a manual hold.
+
+Diagnostics:
+Suction pressure gauge reading confirmed low NPSH conditions. Audible cavitation noise was identified at the pump casing by the attending technician. Inlet strainer differential pressure gauge read 0.52 bar against a clean condition reading of 0.04 bar, confirming severe blockage. Strainer basket removed and found 65% blocked with process scale (calcium carbonate deposits).
+
+Root Cause:
+Inlet strainer cleaning interval was set to 6 months based on original process fluid chemistry. A change in feedstock source 4 months prior increased the calcium hardness of the process fluid from 120 mg/L to 380 mg/L, significantly accelerating scale deposition. The process change had not been communicated to the maintenance team.
+
+Resolution:
+Strainer basket cleaned with 10% hydrochloric acid solution and rinsed. Strainer differential pressure alarm set at 0.25 bar to provide earlier warning. Process fluid hardness monitoring added to weekly quality checks. Cavitation protection interlock enabled.
+
+Recommendations:
+Establish a formal process change notification procedure between process engineering and maintenance teams. Evaluate installation of automatic self-cleaning strainer.
+
+
+INCIDENT REPORT — INC-2024-0327
+Date: 2024-03-27 | Equipment: PUMP_02 | Type: Pressure Drop
+Severity: HIGH | Reported by: L. Dubois | Duration: 3.5 hours
+
+Summary:
+Process pressure on PUMP_02 discharge dropped from 5.0 bar to 1.8 bar in under 3 minutes at 21:15, triggering the low-pressure trip and isolating the pump automatically. Control room alarms for process fluid containment were activated. Initial visual inspection from the control room camera confirmed a visible fluid leak in the pump skid area.
+
+Diagnostics:
+Field inspection identified a blown gasket on the 25 mm bypass line DN25 flange, located 1.2 m downstream of the pump discharge. Gasket material was identified as compressed fibre (CAF), which was the original installation material from 2019. Process fluid analysis confirmed the fluid contained 15% solvent content at 85°C, conditions known to attack CAF gaskets over time. Leak rate estimated at 12 L/min.
+
+Root Cause:
+Gasket creep relaxation and chemical attack from process fluid solvent content over 5 years of service. The gasket had been previously identified as requiring material upgrade in a 2023 engineering review, but the recommendation had not been actioned due to resource constraints.
+
+Resolution:
+Emergency line isolation under permit-to-work. Gasket replaced with spiral-wound stainless/graphite type rated for 16 bar, 200°C, and full chemical compatibility. Joint torqued to 85 Nm per procedure EN 1591-1. Leak test performed at 7.5 bar for 30 minutes — no leakage.
+
+Recommendations:
+Complete the 2023 engineering review action list for gasket upgrades. Implement a gasket register with material, age, and compatibility records for all flanged joints.
+
+
+INCIDENT REPORT — INC-2024-0509
+Date: 2024-05-09 | Equipment: PUMP_03 | Type: Pressure Drop
+Severity: MEDIUM | Reported by: Y. Tanaka | Duration: 2.5 hours
+
+Summary:
+Automatic pressure control on PUMP_03 became erratic at 11:40, with discharge pressure oscillating between 2.1 and 4.8 bar over a 20-minute period before settling at 2.1 bar when control valve CV-201 failed in the fully open position. The DCS recorded the valve output signal at 100% with a feedback position of 100%, but the control signal had been demanding only 40%.
+
+Diagnostics:
+Instrument air pressure to CV-201 actuator was verified at 5.5 bar — within specification. Solenoid valve on the actuator tested for energisation response — no response observed. Solenoid coil resistance measured: open circuit (specified: 22 Ω ±10%). Disassembly of the solenoid revealed burned coil insulation consistent with a sustained overvoltage event.
+
+Root Cause:
+Instrument air solenoid coil failure due to overvoltage. Review of the electrical supply records showed a 48V supply had been applied to a 24V rated solenoid during the previous week's maintenance, when a technician connected an incorrect cable loom following junction box retermination work on an adjacent instrument.
+
+Resolution:
+Solenoid coil replaced. Cable loom correctly labelled and tagged. CV-201 stroke-tested and calibrated. DCS alarm for control valve feedback deviation (>15%) enabled with 30-second delay. Redundant pressure transmitter PT-202 cross-check logic implemented in DCS.
+
+Recommendations:
+Implement cable segregation and colour-coding standard for 24V and 48V instrument supplies. Introduce post-maintenance functional testing checklist for all control valve work.
+
+
+INCIDENT REPORT — INC-2024-0714
+Date: 2024-07-14 | Equipment: PUMP_01 | Type: Pressure Drop
+Severity: MEDIUM-LOW | Reported by: P. Ferreira | Duration: 9.5 hours
+
+Summary:
+Process pressure on PUMP_01 had been gradually declining over 3 weeks, from 5.05 bar to 4.4 bar at constant speed and flow setpoint. The anomaly detection system flagged the trend at 06:00 based on a sustained 0.6 bar deviation from baseline, prompting investigation during the day shift.
+
+Diagnostics:
+Performance curve analysis showed pump was delivering 78% of design head at rated flow, indicating significant hydraulic deterioration. Pump was removed for internal inspection during a planned 8-hour maintenance window. Impeller wear ring clearance measured at 1.8 mm (new: 0.2 mm, maximum allowable: 0.5 mm). Impeller vanes showed erosive wear approximately 2.3 mm reduction on leading edge tips.
+
+Root Cause:
+Erosive wear of impeller caused by sustained operation with entrained fine solids (particle size 50–150 microns) at approximately 0.8% by mass. An upstream filter element had ruptured 4 weeks prior and had been temporarily bypassed while a replacement was on order. The solid loading exceeded the rated tolerance for the standard carbon steel impeller.
+
+Resolution:
+Impeller replaced with duplex stainless steel erosion-resistant type (part IMP-4450-DSS). Wear rings replaced and clearances set to 0.15 mm. Upstream filter element installation expedited. Performance retested at 99% of design head. Impeller inspection added to annual PM scope.
+
+Recommendations:
+Erosion-resistant impeller to be used as standard on pumps handling process fluids with potential solid content. Upstream filter bypass risk assessment required before any future temporary bypass approval.
+
+
+INCIDENT REPORT — INC-2024-0828
+Date: 2024-08-28 | Equipment: MOTOR_01 | Type: Pressure Drop
+Severity: LOW-MEDIUM | Reported by: I. Larsson | Duration: 1.0 hour
+
+Summary:
+Pump discharge pressure on the MOTOR_01 driven pump fell from 4.9 bar to 2.8 bar at 03:20 during night shift. No mechanical alarms were triggered initially. The night shift operator investigated and found the suction vent valve in a partially open position (approximately 15% stem travel).
+
+Diagnostics:
+Dissolved oxygen measurement on pump suction confirmed air ingress at 8.4 ppm (baseline: 0.8 ppm). Flow meter reading was 92% of setpoint with moderate pressure oscillation of ±0.4 bar at 0.8 Hz, consistent with vapour pocket formation and collapse in the suction line. No mechanical damage found on pump internals during precautionary inspection.
+
+Root Cause:
+Operator error: the vent valve was opened during a system priming check and not fully closed. The vent valve handwheel was found to be stiff due to a corroded stem packing gland, making the fully-closed position ambiguous by feel. Operational procedure required only one person to perform suction-side venting without independent verification.
+
+Resolution:
+Vent valve fully closed and locked out with a padlock and LOTO tag. System primed by circulating through the pump for 15 minutes to purge air pockets. Pressure stabilised at 4.95 bar. Vent valve stem packing replaced. Procedure updated to require two-person sign-off and valve position confirmation for all suction-side vent operations.
+
+Recommendations:
+Install open/closed position indicator on all suction-side vent valves. Evaluate replacement of manual vent valves with automated, interlocked type.

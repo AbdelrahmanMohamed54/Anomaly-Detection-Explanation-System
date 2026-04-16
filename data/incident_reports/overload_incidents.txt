@@ -1,0 +1,98 @@
+INCIDENT REPORT — INC-2024-0118
+Date: 2024-01-18 | Equipment: MOTOR_01 | Type: Motor Overload
+Severity: CRITICAL | Reported by: C. Reyes | Duration: 9.0 hours
+
+Summary:
+MOTOR_01 tripped on overcurrent at 04:22, drawing 38 A against a rated full-load current of 14 A. The trip occurred 8 seconds after the anomaly onset, which was the configured time-delay on the motor protection relay. The pump came to an immediate stop and the process line downstream was isolated automatically by the low-flow interlock. No secondary damage to associated pipework.
+
+Diagnostics:
+Initial inspection found no electrical fault on the motor. Shaft rotation was blocked — manual barring of the shaft was not possible. Pump disassembly revealed a sheared key in the impeller keyway. The broken key had jammed between the shaft and the impeller hub bore, locking the assembly solid. Keyway examination showed fretting wear 0.3 mm deep over 40 mm length, indicating the key had been loose for some time before final fracture.
+
+Root Cause:
+Key failure due to fretting fatigue. The interference fit between the impeller hub and shaft had been reduced during the previous overhaul when the shaft was polished to remove minor corrosion, inadvertently reducing the shaft diameter by 0.04 mm below the specified minimum. The resulting loose fit caused micro-movement and key fatigue over approximately 2,000 operating hours.
+
+Resolution:
+Shaft replaced with new OEM component. New stainless steel parallel key fitted, secured with Loctite 243 and torqued impeller hub cap screw to 120 Nm. Motor restarted and current verified at 13.2 A at full load. Shaft dimensional records updated in CMMS.
+
+Recommendations:
+Introduce dimensional recording (shaft OD, bore ID) as a mandatory step in overhaul records. Key condition to be checked at every impeller removal.
+
+
+INCIDENT REPORT — INC-2024-0305
+Date: 2024-03-05 | Equipment: PUMP_02 | Type: Motor Overload
+Severity: HIGH | Reported by: L. Chen | Duration: 2.5 hours
+
+Summary:
+PUMP_02 motor current rose steadily from 13.0 A to 31.2 A over approximately 20 minutes starting at 09:15. RPM dropped 18% (from 1,500 to 1,230 rpm) as measured by the VFD output frequency feedback. The motor protection relay eventually tripped the unit. No high-temperature alarm was triggered prior to trip as the relay response was on current rather than temperature.
+
+Diagnostics:
+Process fluid sampling from the pump suction confirmed a viscosity of 78 cP measured at operating temperature (55°C). The pump design specification calls for a maximum fluid viscosity of 20 cP. Tank tracing records confirmed that tank T-04, from which the fluid was sourced, had a different formulation (an 80 cP blending intermediate) compared to tank T-05 (the 15 cP process fluid). The incorrect tank was selected during the previous shift's batch transfer.
+
+Root Cause:
+Operator error in tank selection during a manual batch transfer, combined with a lack of independent verification. The tank labelling used a small alphanumeric designation only, with no colour or viscosity classification. The control system allowed any tank to be selected without a process parameter check.
+
+Resolution:
+Pump isolated and correct fluid batch rerouted from T-05. Motor cooled for 45 minutes. Winding insulation resistance tested at 850 MΩ — no damage. Normal operation resumed at 13.6 A. Tank labelling scheme revised to include large colour-coded viscosity class indicators. Batch transfer procedure updated with two-person verification.
+
+Recommendations:
+Implement DCS interlock that cross-checks selected source tank fluid classification against the configured pump duty before enabling batch transfer. Tank outlet valves to be electrically interlocked with tank selection on HMI.
+
+
+INCIDENT REPORT — INC-2024-0422
+Date: 2024-04-22 | Equipment: MOTOR_02 | Type: Motor Overload
+Severity: MEDIUM-HIGH | Reported by: A. Popescu | Duration: 4.0 hours
+
+Summary:
+MOTOR_02 was found running at 29 A (rated 14 A) during a routine patrol check at 14:00. The motor was warm to the touch. No automatic trip had occurred as the thermal relay had a trip setpoint of 45 A (found to be incorrectly set from a previous maintenance activity). The elevated current had been sustained for an estimated 90 minutes.
+
+Diagnostics:
+Three-phase current measurements: L1 = 14.1 A, L2 = 19.3 A, L3 = 13.8 A. Phase imbalance calculated at 8.7% (acceptable limit: 2%). Thermal imaging of the motor control centre (MCC) panel identified a hot spot at the L2 bus bar connection. Contact resistance of the L2 connection measured at 0.42 Ω (acceptable: <0.01 Ω). Partial arc tracking marks found on the bus bar surface at the connection point.
+
+Root Cause:
+Loose L2 phase connection in the MCC panel causing high contact resistance and localised resistive heating. The connection had become loose due to thermal cycling fatigue on the bolted joint. The incorrect thermal relay setting (45 A instead of 16 A) meant the protection did not actuate, allowing the condition to persist.
+
+Resolution:
+MCC isolated under electrical permit-to-work. L2 bus bar contact surface cleaned and re-torqued to 40 Nm. Phase imbalance reduced to 0.8%. Thermal relay reset to 16 A trip setting. All three-phase bus bar connections in the MCC torque-tested as a precaution.
+
+Recommendations:
+Implement annual thermographic survey of all MCC panels. Establish a verification step in all protective relay setting change procedures requiring independent sign-off.
+
+
+INCIDENT REPORT — INC-2024-0610
+Date: 2024-06-10 | Equipment: PUMP_03 | Type: Motor Overload
+Severity: CRITICAL | Reported by: D. Walsh | Duration: 5.0 hours
+
+Summary:
+PUMP_03 motor ran at 36 A with RPM falling to 1,180 for approximately 12 minutes before a winding temperature trip at 148°C. Investigation revealed the pump had been operating dead-head against a closed isolation valve on the discharge side. The condition was caused by an adjacent contractor who inadvertently closed the wrong valve during pipework maintenance.
+
+Diagnostics:
+Motor winding insulation resistance tested post-event: 320 MΩ (acceptable, but reduced from the pre-event 950 MΩ, indicating thermal stress on insulation). Motor thermal protection relay was found set to 45 A, significantly higher than the correct 16 A trip setting. Review of the relay calibration records showed the setting was incorrectly adjusted during a relay test 8 months prior and had not been verified since.
+
+Root Cause:
+Two concurrent failures: (1) Contractor valve isolation error — no permit-to-work covered the contractor's isolation boundary overlap with the operating equipment; (2) Motor thermal protection set incorrectly at 45 A, preventing the relay from tripping promptly. Both conditions were necessary for the severity of the outcome.
+
+Resolution:
+Discharge valve opened and motor allowed to cool for 45 minutes. Thermal relay reset to 16 A. Winding insulation monitoring set as a monthly check. Contractor isolation boundary review initiated. Permit-to-work system updated to include a mandatory drawing check for boundary conflicts.
+
+Recommendations:
+All motor protection relay settings to be audited plant-wide against motor nameplates. Contractor management procedure to require mandatory PTW coordination meetings before any work within 5 m of operating equipment.
+
+
+INCIDENT REPORT — INC-2024-0801
+Date: 2024-08-01 | Equipment: PUMP_01 | Type: Motor Overload
+Severity: HIGH | Reported by: N. Okonkwo | Duration: 7.5 hours
+
+Summary:
+VFD fault on PUMP_01 drive at 01:45 caused an uncontrolled speed excursion. The motor accelerated to 1,820 rpm (18% over rated) before the overspeed protection activated and tripped the drive. Motor current at trip was 33 A. VFD event log recorded fault code F0023 (gate driver fault) and F0011 (DC bus overvoltage at 830V against rated 750V).
+
+Diagnostics:
+DC bus capacitance measured at 68% of nominal (rated: 4,700 µF, measured: 3,200 µF), indicating significant capacitor degradation. Voltage ripple at DC bus under load measured at 14.2% — exceeding the 8% specification. IGBT gate driver board tested and confirmed gate threshold voltage drifted outside specification. Drive installation date: 2015, capacitor service life typically 7–8 years.
+
+Root Cause:
+End-of-life DC bus electrolytic capacitors. Degraded capacitance increased DC bus voltage ripple, which combined with the gate driver fault caused the IGBT switching pattern to become erratic, allowing uncontrolled motor acceleration. Both the capacitor replacement and gate driver board had been deferred from the previous year's planned maintenance budget.
+
+Resolution:
+VFD DC bus capacitors replaced with manufacturer-recommended type. Gate driver board replaced under extended manufacturer warranty. VFD recommissioned with ramp-up time extended from 5 s to 12 s. Motor current verified at 13.4 A at full load. VFD replacement planned in the following year's capital budget.
+
+Recommendations:
+Establish a VFD capacitor life management programme — replace electrolytic capacitors at 6–7 year intervals as standard. Annual VFD capacitor health checks using ESR measurement added to PM plan.

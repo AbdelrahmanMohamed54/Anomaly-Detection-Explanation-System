@@ -1,0 +1,98 @@
+INCIDENT REPORT — INC-2024-0312
+Date: 2024-03-12 | Equipment: PUMP_01 | Type: Bearing Wear
+Severity: HIGH | Reported by: K. Bauer | Duration: 3.5 hours
+
+Summary:
+PUMP_01 triggered the high-vibration alarm at 02:47 with a measured amplitude of 3.8 mm/s on the drive-end bearing housing, against a normal baseline of 0.22 mm/s. Simultaneously, the bearing temperature rose to 96°C (alarm threshold: 90°C). The pump was manually isolated at 03:05 to prevent secondary damage.
+
+Diagnostics:
+Vibration spectrum analysis revealed dominant energy at the ball pass frequency outer race (BPFO) at 112 Hz, consistent with outer race spalling. Oil sample taken from the bearing housing showed ferrous particle count of 420 ppb (acceptable limit: 50 ppb). Microscopic inspection of the grease confirmed metallic debris and oxidised lubricant, indicating that the lubricant service interval had been exceeded by approximately 2,200 operating hours.
+
+Root Cause:
+Lubrication degradation due to missed preventive maintenance. The grease re-lubrication interval for PUMP_01 was incorrectly set to 4,000 hours in the CMMS rather than the OEM-specified 2,000 hours. Heat buildup from inadequate lubrication accelerated oxidation, leading to outer race fatigue and spalling.
+
+Resolution:
+Bearing replaced with SKF 6311-2RS1. Grease repacked with Mobil Mobilith SHC 460. CMMS re-lubrication interval corrected to 2,000 hours. Post-repair vibration: 0.19 mm/s. Pump returned to service at 06:30.
+
+Recommendations:
+Audit re-lubrication intervals for all five pumps and motors in the CMMS. Implement vibration trending alerts at 1.5x baseline to allow planned intervention.
+
+
+INCIDENT REPORT — INC-2024-0418
+Date: 2024-04-18 | Equipment: MOTOR_01 | Type: Bearing Wear
+Severity: MEDIUM-HIGH | Reported by: S. Mitchell | Duration: 5.8 hours
+
+Summary:
+MOTOR_01 non-drive-end bearing temperature gradually increased from 68°C to 102°C over a 48-hour period. Vibration reached 2.9 mm/s. The anomaly detection system flagged the event at 14:22 based on the compound deviation of both temperature and vibration signals exceeding the threshold simultaneously.
+
+Diagnostics:
+Acoustic emission analysis using a portable SVAN 979 analyser detected high-frequency stress waves at 147 Hz, consistent with bearing inner race defect frequency for the SKF 6208-2Z bearing in service. Waveform analysis showed impacting characteristic of early-stage spalling rather than generalised wear. Stroboscopic inspection of the coupling confirmed slight angular misalignment of 0.18 mm, which is within tolerance but contributes marginally to bearing load.
+
+Root Cause:
+Bearing inner race fatigue caused by cumulative cyclic loading. The motor was operating continuously at 103% of rated torque due to a process flow increase implemented six weeks prior without a corresponding mechanical review. Elevated radial load accelerated subsurface fatigue crack propagation on the inner race.
+
+Resolution:
+Both drive-end and non-drive-end bearings replaced. PT100 sensor installed directly on non-drive-end bearing cap. Motor load reviewed and VFD current limit set to 98% rated. Post-repair vibration: 0.21 mm/s, temperature stabilised at 71°C.
+
+Recommendations:
+Process change management procedure updated to require mechanical equipment review when throughput increases by more than 5%. Continuous vibration trending implemented via online CMS.
+
+
+INCIDENT REPORT — INC-2024-0601
+Date: 2024-06-01 | Equipment: PUMP_02 | Type: Bearing Wear
+Severity: MEDIUM | Reported by: J. Kowalski | Duration: 4.2 hours
+
+Summary:
+Routine vibration survey on PUMP_02 identified a 2x running speed harmonic at 50 Hz with amplitude 1.8 mm/s. The fundamental (1x) was normal at 0.24 mm/s. This pattern, combined with a 12°C temperature rise on the coupling-side bearing, indicated misalignment-induced bearing stress requiring planned intervention.
+
+Diagnostics:
+Laser alignment measurement using Pruftechnik OPTALIGN revealed angular misalignment of 0.45 mm and offset of 0.31 mm at the coupling. Both values exceeded the allowable limit of 0.05 mm specified for the flexible jaw coupling type. Coupling rubber spider element was also found to be partially delaminated, contributing to asymmetric force transmission.
+
+Root Cause:
+Thermal growth miscalculation after pump baseplate grouting repair performed two months prior. The cold alignment target was set without compensating for the 0.38 mm thermal rise at operating temperature, resulting in a hot misalignment condition. The degraded coupling element amplified the dynamic forces on the bearing.
+
+Resolution:
+Shaft realigned to within 0.02 mm. Coupling spider element replaced. Coupling-side bearing replaced preventively. Post-thermal-stabilisation alignment recheck confirmed values within tolerance. Vibration reduced to 0.26 mm/s.
+
+Recommendations:
+Update alignment procedure to include documented thermal growth compensation for all pump-motor sets. Coupling inspection added to quarterly PM task list.
+
+
+INCIDENT REPORT — INC-2024-0723
+Date: 2024-07-23 | Equipment: PUMP_03 | Type: Bearing Wear
+Severity: MEDIUM | Reported by: A. Farouk | Duration: 6.0 hours
+
+Summary:
+Gradual vibration increase on PUMP_03 detected during continuous monitoring — from 0.21 mm/s to 1.9 mm/s over 5 days. Vibration spectrum showed broadband increase across 100–400 Hz characteristic of abrasive wear rather than a discrete defect frequency. This pattern prompted a planned bearing inspection during a scheduled downtime window.
+
+Diagnostics:
+Bearing inspection revealed torn lip seal on the non-drive-end bearing. Process fluid (pH 3.5, mildly acidic) had entered the bearing housing through the damaged seal, contaminating the grease. Rolling elements showed uniform abrasive wear approximately 0.06 mm on the ball diameter. Cage showed stress cracking consistent with operation in a contaminated lubricant environment.
+
+Root Cause:
+Lip seal material (NBR) was incompatible with the process fluid at the operating pH, leading to progressive swelling and eventual tearing. The component specification sheet from the original installation used a generic NBR seal without chemical compatibility verification against the current process fluid formulation, which was changed 18 months ago.
+
+Resolution:
+Bearing replaced. V-ring seal installed with FKM material rated for pH 2.0–10.0 and process fluid compatibility confirmed. Lubricant flushed and replaced. Post-repair vibration: 0.19 mm/s.
+
+Recommendations:
+Conduct full seal material audit across all pump and motor bearing housings. Update maintenance BOM to specify FKM seals as standard for all process-wetted equipment.
+
+
+INCIDENT REPORT — INC-2024-0905
+Date: 2024-09-05 | Equipment: MOTOR_02 | Type: Bearing Wear
+Severity: HIGH | Reported by: M. Gonzalez | Duration: 2.5 hours
+
+Summary:
+MOTOR_02 tripped on high vibration (4.2 mm/s) at 09:17. Investigation revealed that the discharge line had been partially blocked for approximately 4 hours prior to the trip, causing the pump to operate in a recirculation condition. The resulting high radial thrust load on the pump bearings transmitted through the shaft coupling to the motor drive-end bearing.
+
+Diagnostics:
+Post-trip vibration spectrum analysis showed dominant energy at 1x and 3x running speed, indicating shaft deflection consistent with high radial load. Bearing inspection revealed edge loading damage on the outer race — contact ellipse shifted to one side, confirming asymmetric radial loading. Discharge check valve was found stuck partially open due to solidified process residue in the valve body.
+
+Root Cause:
+Blocked discharge created back-pressure and recirculation, inducing a net radial force of approximately 2.8 kN on the pump shaft (design limit: 1.2 kN). This deflection transmitted to the motor bearing through the coupling. The check valve had not been included in the plant inspection schedule.
+
+Resolution:
+Discharge line cleared and check valve replaced. Motor drive-end bearing replaced. Discharge pressure transmitter PT-105 alarm set at 6.5 bar high-high with automatic interlock. Check valve added to 6-month inspection PM list.
+
+Recommendations:
+Implement minimum flow protection for all process pumps. Review check valve inspection coverage plant-wide.

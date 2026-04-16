@@ -1,0 +1,152 @@
+CORRECTIVE ACTION LOG — CA-2024-0113
+Date: 2024-01-13 | Equipment: PUMP_02 | Technician: K. Bauer
+Fault Type: Bearing Wear | Work Order: CW-2024-0042
+
+Action Taken:
+Emergency bearing replacement on PUMP_02 drive-end following high-vibration trip (3.6 mm/s). Unit isolated under PTW-2024-0015. Bearing removed using SKF TMMP 20 bearing puller — outer race found with three discrete spall pits on the inner raceway, approximately 8 mm x 4 mm each. Rolling element surfaces showed secondary indentation damage from spalled material.
+
+Bearing replaced with SKF 6310-2RS1 (OEM equivalent). Bearing housing cleaned with lint-free cloth and solvent wash. New grease applied: 20 g Mobilith SHC 460. Seal lip inspected and found intact — not replaced. Coupling reassembled and alignment verified: 0.03 mm angular.
+
+Post-repair verification: Vibration measurement at startup — 0.21 mm/s. Temperature stabilised at 69°C after 30-minute run. Motor current normal at 13.3 A. PTW closed. Unit returned to service.
+
+Time taken: 3.5 hours. Parts used: 1 x SKF 6310-2RS1 bearing.
+
+
+CORRECTIVE ACTION LOG — CA-2024-0204
+Date: 2024-02-04 | Equipment: PUMP_03 | Technician: J. Kowalski
+Fault Type: Pressure Drop — Inlet Strainer Blockage | Work Order: CW-2024-0078
+
+Action Taken:
+Responded to low-pressure alarm on PUMP_03 (pressure dropped from 5.0 bar to 2.4 bar). Pump isolated to prevent cavitation damage. Suction strainer basket removed under PTW — found 70% blocked with a combination of process scale and fibrous organic material.
+
+Strainer basket cleaned in a 15% citric acid solution (pH 1.8) for 45 minutes, agitated with nylon brush, then rinsed with clean demineralised water. Final rinse verified clean with visual inspection and pH strip (pH neutral). Basket reinstalled with new NBR O-ring gasket.
+
+DP across clean strainer verified at 0.02 bar. Pump restarted — pressure restored to 5.05 bar within 90 seconds. Flow rate verified at setpoint ±2%.
+
+Root cause of blockage: upstream process filter had been bypassed for 3 days due to a spare parts delay. Communication issued to operations team to reduce pump speed during any future filter bypass.
+
+Time taken: 2.0 hours.
+
+
+CORRECTIVE ACTION LOG — CA-2024-0228
+Date: 2024-02-28 | Equipment: MOTOR_02 | Technician: A. Popescu
+Fault Type: Phase Imbalance / Overload | Work Order: CW-2024-0098
+
+Action Taken:
+Following a thermographic alert identifying the MOTOR_02 feeder L2 bus bar connection as a hot spot (ΔT = 62°C above ambient), the MCC was isolated under a high-voltage PTW and the L2 bus bar connection inspected.
+
+Found: L2 connection bolt torque measured at 18 Nm (specified: 40 Nm). Contact surface showed oxide discolouration and slight arc pitting over a 15 mm² area. Both mating surfaces cleaned with a fine wire brush to remove oxide layer, exposing bright metal contact surface. Anti-oxidant compound applied to both surfaces. Connection re-torqued in two stages to 40 Nm using a calibrated torque wrench.
+
+All three phases retested: L1=13.8 A, L2=13.7 A, L3=13.9 A — balanced. Phase imbalance: 0.7%. Thermographic re-check after 2 hours at operating load: L2 connection temperature 29°C above ambient (ΔT = 29°C, down from 62°C) — within acceptable limits.
+
+Time taken: 2.5 hours. Work confirmed complete by electrical supervisor.
+
+
+CORRECTIVE ACTION LOG — CA-2024-0320
+Date: 2024-03-20 | Equipment: PUMP_01 | Technician: S. Mitchell
+Fault Type: Mechanical Seal Leak | Work Order: CW-2024-0134
+
+Action Taken:
+Responded to process fluid drip from PUMP_01 mechanical seal gland area — leakage rate estimated at 25 drops/min (limit: 10 drops/min). Pump isolated and seal housing depressurised.
+
+Seal face assembly disassembled under PTW. Primary seal ring (carbon/silicon carbide face pair) found with a circumferential scratch mark 0.4 mm wide and 80 mm arc length on the seal face — consistent with a hard particle inclusion event. Secondary O-ring showed no deformation or damage.
+
+Complete rotating seal assembly replaced with OEM spare set (part no. MS-4420-CS). Seal flush lines flushed and verified clean before reassembly. Seal gland torqued per manufacturer procedure. Pump recommissioned with seal flush pressure verified at 0.7 bar above stuffing box.
+
+Post-repair verification: Zero leakage after 4-hour run at operating conditions. Seal face temperature measured at 45°C — within limit of 60°C.
+
+Time taken: 4.0 hours. Parts: 1 x rotating seal assembly MS-4420-CS.
+
+
+CORRECTIVE ACTION LOG — CA-2024-0415
+Date: 2024-04-15 | Equipment: MOTOR_01 | Technician: Y. Tanaka
+Fault Type: Control Valve Fault (Contributing to pressure instability) | Work Order: CW-2024-0171
+
+Action Taken:
+Control valve CV-103 on the MOTOR_01 pump discharge was found responding sluggishly — 90% step response time measured at 22 seconds against the required <5 seconds. This caused pressure oscillations of ±0.6 bar during flow changes.
+
+Actuator disassembled and inspected. Instrument air filter bowl found 80% blocked with rust particles from a corroded upstream air line section. Actuator diaphragm spring mechanism showed corrosion on spring coils — spring rate measured 15% below specification due to corrosion thinning.
+
+Corrective actions: Instrument air filter element replaced. Corroded upstream air line section (0.5 m DN8) replaced with stainless steel. Actuator spring replaced with OEM part. Actuator internals cleaned and reassembled. Valve stroke-tested: 0–100% travel in 2.1 seconds — within specification.
+
+Also: DCS trim algorithm recalibrated to correct for minor valve characteristic deviation. Post-repair pressure control stable: oscillation <±0.05 bar.
+
+Time taken: 3.0 hours.
+
+
+CORRECTIVE ACTION LOG — CA-2024-0508
+Date: 2024-05-08 | Equipment: PUMP_02 | Technician: L. Dubois
+Fault Type: Excessive Vibration — Misalignment | Work Order: CW-2024-0198
+
+Action Taken:
+Vibration survey revealed PUMP_02 vibration had increased from baseline 0.24 mm/s to 1.1 mm/s over the past 6 weeks. Spectrum analysis showed dominant 2x running speed harmonic at 50 Hz, consistent with misalignment. Laser alignment check performed using Pruftechnik OPTALIGN Smart.
+
+Measurement results: Angular misalignment 0.32 mm, offset 0.19 mm — both outside the ±0.05 mm specification. Root cause identified as thermal growth: the pump had been moved slightly on the baseplate by 0.28 mm due to grout settlement under the motor foot.
+
+Realignment procedure: Motor soft feet corrected first — all four motor feet brought to within 0.02 mm flatness using stainless steel shims. Shaft realigned using the OPTALIGN — final values: angular 0.01 mm, offset 0.02 mm. Coupling bolts retorqued.
+
+Post-alignment vibration check after thermal stabilisation (2-hour run): DE 0.22 mm/s — returned to baseline. No further action.
+
+Time taken: 3.5 hours.
+
+
+CORRECTIVE ACTION LOG — CA-2024-0620
+Date: 2024-06-20 | Equipment: PUMP_03 | Technician: M. Gonzalez
+Fault Type: Bearing Wear — Contaminated Lubricant | Work Order: CW-2024-0241
+
+Action Taken:
+Following a vibration increase on PUMP_03 (0.21 to 1.9 mm/s over 5 days), planned bearing inspection during a scheduled downtime. Bearing removal confirmed torn lip seal and abrasively worn bearing rolling elements.
+
+Corrective actions: (1) Bearing replaced with SKF 6311 — bearing housing cleaned thoroughly to remove contaminated grease residue using solvent flush. (2) Lip seal upgraded from NBR to FKM V-ring type (FKM compatible with process fluid pH 2.5, operating temperature 80°C). (3) Grease repacked with 18 g of Mobilith SHC 460 — verified clean and free of contamination.
+
+Quality check: New seal installed and shaft rotation checked manually — smooth with no drag. Pump restarted and vibration verified at 0.19 mm/s. Temperature stable at 71°C after 1-hour run.
+
+Seal material upgrade logged in CMMS equipment history and spare parts BOM updated to FKM type for this equipment class.
+
+Time taken: 5.5 hours.
+
+
+CORRECTIVE ACTION LOG — CA-2024-0712
+Date: 2024-07-12 | Equipment: MOTOR_02 | Technician: P. Ferreira
+Fault Type: Overload — VFD Parameter Drift | Work Order: CW-2024-0278
+
+Action Taken:
+MOTOR_02 was found running 8% above normal current (14.9 A vs. expected 13.8 A) following a VFD firmware update performed by a contractor. Investigation found that the VFD motor nameplate data (rated current, power factor, magnetising current) had been reset to factory defaults during the firmware update, causing suboptimal motor control and higher slip losses.
+
+Corrective actions: VFD motor parameters re-entered from the commissioning data sheet: rated current 14.0 A, rated power factor 0.87, rated frequency 50 Hz, rated speed 1,476 rpm, magnetising current 4.2 A. Auto-tune function run with motor at no load, then at full load. Torque response and current waveform verified with portable power analyser.
+
+Post-correction motor current: 13.7 A at full process load. Efficiency improved — power consumption reduced by 1.1 kW. VFD parameter backup file updated and stored in the CMMS document archive. Procedure updated: firmware updates to require parameter backup verification step.
+
+Time taken: 2.5 hours.
+
+
+CORRECTIVE ACTION LOG — CA-2024-0820
+Date: 2024-08-20 | Equipment: PUMP_01 | Technician: C. Reyes
+Fault Type: Pressure Drop — Worn Impeller | Work Order: CW-2024-0315
+
+Action Taken:
+Performance monitoring data showed PUMP_01 head had deteriorated from 28 m to 22 m over 4 months at constant speed. Pump removed for internal inspection. Impeller found with significant erosive wear: vane leading edges eroded 2.5 mm, wear ring clearance 1.7 mm (limit: 0.5 mm).
+
+Replacement: Impeller replaced with duplex stainless steel erosion-resistant type (IMP-4450-DSS). New wear rings installed and clearances set to 0.15 mm using feeler gauges. Impeller balance check performed — within G2.5 grade. Pump casing and volute inspected — no significant erosion found in casing, surface roughness acceptable.
+
+Performance test after reassembly: head 28.5 m at rated flow — 102% of design. Motor current 13.1 A — slightly lower than pre-repair due to improved hydraulic efficiency.
+
+Contributing factor: upstream filter element had been in service 6 months beyond recommended replacement interval, allowing fine solids to reach the pump. Filter replacement frequency increased to 3 months.
+
+Time taken: 8.0 hours.
+
+
+CORRECTIVE ACTION LOG — CA-2024-0918
+Date: 2024-09-18 | Equipment: MOTOR_01 | Technician: N. Okonkwo
+Fault Type: Overload — Phase Unbalance Following Rewiring | Work Order: CW-2024-0352
+
+Action Taken:
+Following rewiring of the motor junction box after a cable insulation failure, MOTOR_01 was found drawing unbalanced phase currents: L1=16.2 A, L2=13.9 A, L3=13.8 A. Phase imbalance of 8.2% — well above the 2% limit. No trip occurred as the overcurrent relay was set above the trip point.
+
+Investigation: Terminal box opened. L1 terminal found with a reversed connection — two conductors had been inadvertently swapped during the rewiring, altering the phase sequence for one winding group. The motor was running as a consequence of partial single-phasing on one winding section.
+
+Corrective actions: Motor isolated immediately — risk of winding overheating confirmed. Conductors reconnected correctly per motor wiring diagram. Phase rotation verified with phase rotation meter (correct: L1-L2-L3 clockwise). Motor restarted: L1=13.9 A, L2=13.8 A, L3=13.9 A — balanced. Imbalance: 0.4%.
+
+Winding insulation resistance checked post-incident: 720 MΩ (reduced from 980 MΩ pre-event, but acceptable). Motor to be monitored monthly for 6 months.
+
+Time taken: 2.0 hours. Rewiring contractor procedure reviewed and updated with mandatory phase rotation check before energisation.
