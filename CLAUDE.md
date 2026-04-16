@@ -109,9 +109,13 @@ Commit types: feat / fix / refactor / test / docs / chore
 3. model/train.py — train the LSTM autoencoder on synthetic data ✓
 4. model/anomaly_detector.py — inference wrapper with threshold logic ✓
 
-### Session 2 onwards
-5. scripts/seed_postgres.py — seed historical anomaly database
-6. scripts/ingest_incident_reports.py + ingest_maintenance_logs.py — ChromaDB
+### Session 2 — COMPLETE
+5. scripts/seed_postgres.py — seed historical anomaly database ✓
+6. scripts/ingest_incident_reports.py + ingest_maintenance_logs.py — ChromaDB ✓
+   Knowledge base: 90 incident report chunks + 102 maintenance log chunks in ChromaDB
+   PostgreSQL: requires `docker-compose up db` or local postgres before running seed_postgres.py
+
+### Session 3 onwards
 7. agent/tools/historical_query.py — PostgreSQL tool
 8. agent/tools/semantic_search.py — ChromaDB incident report tool
 9. agent/tools/action_recommender.py — ChromaDB maintenance log tool
