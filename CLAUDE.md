@@ -115,12 +115,19 @@ Commit types: feat / fix / refactor / test / docs / chore
    Knowledge base: 90 incident report chunks + 102 maintenance log chunks in ChromaDB
    PostgreSQL: requires `docker-compose up db` or local postgres before running seed_postgres.py
 
-### Session 3 onwards
-7. agent/tools/historical_query.py — PostgreSQL tool
-8. agent/tools/semantic_search.py — ChromaDB incident report tool
-9. agent/tools/action_recommender.py — ChromaDB maintenance log tool
-10. agent/rca_agent.py — LangChain agent wiring all 3 tools
-11. agent/report_generator.py — bilingual EN/DE report formatter
+### Session 3 — COMPLETE
+7. agent/tools/historical_query.py — PostgreSQL tool ✓
+8. agent/tools/semantic_search.py — ChromaDB incident report tool ✓
+9. agent/tools/action_recommender.py — ChromaDB maintenance log tool ✓
+10. agent/rca_agent.py — LangChain agent wiring all 3 tools ✓
+    Uses LangChain 1.2.x / LangGraph create_agent API with response_format=RCAStructuredOutput
+    Escalation override: severity >= 0.8 forces escalate=True regardless of LLM output
+    agent/schemas.py — shared Pydantic models (RCAReport, RCAStructuredOutput, etc.)
+    agent/report_generator.py — stub (interface locked; full bilingual impl in Session 4)
+    29/29 tests passing across all sessions
+
+### Session 4 onwards
+11. agent/report_generator.py — bilingual EN/DE report formatter (full impl)
 12. api/main.py — FastAPI /analyze and /health endpoints
 13. grafana/dashboard.json — Grafana dashboard configuration
 14. docker-compose.yml + Dockerfile — containerization
