@@ -1,14 +1,19 @@
 """
-Integration tests for the RCAAgent.
+Integration tests for the RCAAgent and ReportGenerator.
 
-All three tools and the LLM are mocked so tests run without live services
+All LLM calls and tools are mocked so tests run without live services
 (no PostgreSQL, ChromaDB, or Gemini API required).
 
 Coverage:
-    test_rca_report_has_all_fields_populated  — RCAReport returned with every field set
-    test_escalate_true_when_severity_above_threshold — severity >= 0.8 forces escalate=True
-    test_escalate_false_for_low_severity      — severity < 0.8 with LLM escalate=False
-    test_generate_report_called               — report_generator.generate_report is invoked
+    TestRCAAgent:
+        test_rca_report_has_all_fields_populated
+        test_escalate_true_when_severity_above_threshold
+        test_escalate_false_for_low_severity
+        test_generate_report_called
+
+    TestReportGenerator:
+        test_en_report_has_all_required_fields
+        test_de_report_contains_german_text
 """
 
 from __future__ import annotations
@@ -20,6 +25,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from agent.rca_agent import ESCALATION_SEVERITY_THRESHOLD, RCAAgent
+from agent.report_generator import ReportGenerator, _TranslatedFields
 from agent.schemas import RCAReport, RCAStructuredOutput
 
 
@@ -221,3 +227,120 @@ class TestRCAAgent:
         assert len(report.similar_incidents) <= 3, (
             "similar_incidents in RCAReport must be capped at 3"
         )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TestReportGenerator — bilingual formatter (Session 4)
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+def _make_en_report(severity: float = 0.72) -> RCAReport:
+    """Return a fully populated English RCAReport for use in generator tests."""
+    return RCAReport(
+        sensor_id="PUMP_01",
+        severity=severity,
+        anomaly_summary=(
+            "PUMP_01 drive-end bearing exhibits elevated vibration (3.8 mm/s) and "
+            "temperature (96°C), consistent with early-stage outer race spalling."
+        ),
+        root_cause=(
+            "Lubrication degradation: re-lubrication interval set to 4,000 hours "
+            "in CMMS vs. OEM-specified 2,000 hours. Oxidised grease caused bearing fatigue."
+        ),
+        similar_incidents=[
+            "INC-2024-0312: outer race spalling resolved by bearing replacement.",
+            "INC-2024-0418: inner race fatigue from overloading, bearings replaced.",
+            "INC-2024-0815: planned bearing replacement based on vibration trending.",
+        ],
+        recommended_actions=[
+            "Isolate PUMP_01 and remove drive-end bearing for inspection.",
+            "Replace bearing with SKF 6311-2RS1, repack with 15 g Mobilith SHC 460.",
+            "Correct CMMS re-lubrication interval to 2,000 hours.",
+        ],
+        escalate=False,
+        sources=["historical_anomaly_tool", "incident_search_tool", "corrective_action_tool"],
+        generation_time_seconds=4.2,
+        language="en",
+    )
+
+
+class TestReportGenerator:
+    """Tests for ReportGenerator.generate() and generate_bilingual()."""
+
+    def test_en_report_has_all_required_fields(self) -> None:
+        """generate(language='EN') must return an RCAReport with all fields populated."""
+        en_report = _make_en_report()
+        rca_result = en_report.model_dump()
+
+        with patch.object(ReportGenerator, "_build_llm", return_value=MagicMock()):
+            gen = ReportGenerator()
+            result: RCAReport = asyncio.run(gen.generate(rca_result, language="EN"))
+
+        assert isinstance(result, RCAReport), "generate() must return an RCAReport"
+        assert result.sensor_id == "PUMP_01"
+        assert result.language == "en"
+        assert 0.0 <= result.severity <= 1.0
+        assert result.anomaly_summary, "anomaly_summary must not be empty"
+        assert result.root_cause, "root_cause must not be empty"
+        assert len(result.similar_incidents) >= 1
+        assert len(result.recommended_actions) >= 1
+        assert isinstance(result.escalate, bool)
+        assert result.generation_time_seconds >= 0.0
+
+    def test_de_report_contains_german_text(self) -> None:
+        """generate(language='DE') must return a report with German-language content."""
+        en_report = _make_en_report()
+        rca_result = en_report.model_dump()
+
+        # Mock the LLM translation to return plausible German text
+        german_fields = _TranslatedFields(
+            anomaly_summary=(
+                "Das Lager der Antriebsseite von PUMP_01 zeigt erhoehte Schwingungen "
+                "(3,8 mm/s) und Temperatur (96 Grad C), was fruehzeitigem Aussenring-Pittingschaden entspricht."
+            ),
+            root_cause=(
+                "Schmierstoffversagen: Nachschmierintervall im CMMS auf 4.000 Stunden eingestellt "
+                "statt der vom Hersteller vorgeschriebenen 2.000 Stunden. "
+                "Oxidiertes Fett verursachte Lagerermuedung."
+            ),
+            similar_incidents=[
+                "INC-2024-0312: Aussenring-Pittingschaden durch Lagertausch behoben.",
+                "INC-2024-0418: Innenring-Ermuedung durch Ueberlastung, Lager ersetzt.",
+                "INC-2024-0815: Geplanter Lagertausch aufgrund von Schwingungsanalyse.",
+            ],
+            recommended_actions=[
+                "PUMP_01 unter Erlaubnisschein isolieren und Antriebslager ausbauen.",
+                "Lager durch SKF 6311-2RS1 ersetzen, mit 15 g Mobilith SHC 460 nachschmieren.",
+                "Nachschmierintervall im CMMS auf 2.000 Stunden korrigieren.",
+            ],
+        )
+
+        mock_chain = MagicMock()
+        mock_chain.ainvoke = AsyncMock(return_value=german_fields)
+        mock_llm = MagicMock()
+        mock_llm.with_structured_output.return_value = mock_chain
+
+        with patch.object(ReportGenerator, "_build_llm", return_value=mock_llm):
+            gen = ReportGenerator()
+            de_report: RCAReport = asyncio.run(gen.generate(rca_result, language="DE"))
+
+        assert de_report.language == "de", "language field must be 'de'"
+
+        # Verify German words appear in the translated fields
+        german_indicators = ["Lager", "Schwingungen", "Schmierstoff", "Lagertausch", "isolieren"]
+        all_de_text = (
+            de_report.anomaly_summary
+            + de_report.root_cause
+            + " ".join(de_report.similar_incidents)
+            + " ".join(de_report.recommended_actions)
+        )
+        found = [word for word in german_indicators if word in all_de_text]
+        assert found, (
+            f"DE report must contain German text. "
+            f"Checked for: {german_indicators}. Text sample: {all_de_text[:200]}"
+        )
+
+        # Sensor metadata must be unchanged
+        assert de_report.sensor_id == en_report.sensor_id
+        assert de_report.severity == en_report.severity
+        assert de_report.escalate == en_report.escalate
