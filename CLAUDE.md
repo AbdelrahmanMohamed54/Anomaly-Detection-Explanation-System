@@ -126,8 +126,18 @@ Commit types: feat / fix / refactor / test / docs / chore
     agent/report_generator.py — stub (interface locked; full bilingual impl in Session 4)
     29/29 tests passing across all sessions
 
-### Session 4 onwards
-11. agent/report_generator.py — bilingual EN/DE report formatter (full impl)
-12. api/main.py — FastAPI /analyze and /health endpoints
+### Session 4 — COMPLETE
+11. agent/report_generator.py — bilingual EN/DE report formatter (full impl) ✓
+    ReportGenerator class: generate(dict, language) + generate_bilingual(dict) -> tuple
+    German translation via second LLM call with structured output (_TranslatedFields schema)
+    generate_report() sync wrapper kept for rca_agent.py backward compatibility
+12. api/main.py — FastAPI backend ✓
+    Endpoints: GET /health, POST /analyze, POST /simulate, GET /history
+    Startup lifespan loads TF model, verifies PostgreSQL + ChromaDB
+    CORS middleware enabled; in-memory history (last 10 analyses)
+    End-to-end verified: /simulate with real Gemini LLM produced full RCA report
+    39/39 tests passing across all sessions
+
+### Session 5 onwards
 13. grafana/dashboard.json — Grafana dashboard configuration
 14. docker-compose.yml + Dockerfile — containerization
