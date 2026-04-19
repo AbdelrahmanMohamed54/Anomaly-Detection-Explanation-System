@@ -1,0 +1,862 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_ANOMALY_API",
+      "label": "Anomaly Detection API",
+      "description": "FastAPI JSON datasource at http://localhost:8000",
+      "type": "datasource",
+      "pluginId": "marcusolsson-json-datasource",
+      "pluginName": "JSON API"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "marcusolsson-json-datasource",
+      "name": "JSON API",
+      "version": "1.3.6"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "barchart",
+      "name": "Bar chart",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Real-time anomaly detection monitoring with AI-generated bilingual (EN/DE) root cause analysis reports.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 100,
+      "title": "System Health",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [
+            { "options": { "ok": { "color": "green", "index": 0, "text": "OK" }, "degraded": { "color": "orange", "index": 1, "text": "DEGRADED" } }, "type": "value" }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "green", "value": 80 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 1 },
+      "id": 1,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [{ "jsonPath": "$.status", "name": "System Status", "type": "string" }],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/health"
+        }
+      ],
+      "title": "System Status",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [
+            { "options": { "true": { "color": "green", "index": 0, "text": "Loaded" }, "false": { "color": "red", "index": 1, "text": "Missing" } }, "type": "value" }
+          ],
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 1 },
+      "id": 2,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [{ "jsonPath": "$.model_loaded", "name": "LSTM Model", "type": "string" }],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/health"
+        }
+      ],
+      "title": "LSTM Model",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [
+            { "options": { "true": { "color": "green", "index": 0, "text": "Connected" }, "false": { "color": "red", "index": 1, "text": "Offline" } }, "type": "value" }
+          ],
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 1 },
+      "id": 3,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [{ "jsonPath": "$.db_connected", "name": "PostgreSQL", "type": "string" }],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/health"
+        }
+      ],
+      "title": "PostgreSQL",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [
+            { "options": { "true": { "color": "green", "index": 0, "text": "Accessible" }, "false": { "color": "red", "index": 1, "text": "Offline" } }, "type": "value" }
+          ],
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 1 },
+      "id": 4,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [{ "jsonPath": "$.chromadb_accessible", "name": "ChromaDB", "type": "string" }],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/health"
+        }
+      ],
+      "title": "ChromaDB",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 1 },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [{ "jsonPath": "$.count", "name": "Total Analyses", "type": "number" }],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/history"
+        }
+      ],
+      "title": "Analyses in History",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+      "id": 101,
+      "title": "Latest RCA Report (English)",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.5 },
+              { "color": "orange", "value": 0.7 },
+              { "color": "red", "value": 0.8 }
+            ]
+          },
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 6, "w": 4, "x": 0, "y": 6 },
+      "id": 6,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [{ "jsonPath": "$.analyses[0].en_report.severity", "name": "Severity", "type": "number" }],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/history"
+        }
+      ],
+      "title": "Latest Anomaly Severity",
+      "type": "gauge"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [
+            { "options": { "true": { "color": "red", "index": 0, "text": "ESCALATE" }, "false": { "color": "green", "index": 1, "text": "Monitor" } }, "type": "value" }
+          ],
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 3, "w": 4, "x": 4, "y": 6 },
+      "id": 7,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [{ "jsonPath": "$.analyses[0].en_report.escalate", "name": "Escalate", "type": "string" }],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/history"
+        }
+      ],
+      "title": "Escalation Required",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 3, "w": 4, "x": 4, "y": 9 },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [{ "jsonPath": "$.analyses[0].sensor_id", "name": "Sensor ID", "type": "string" }],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/history"
+        }
+      ],
+      "title": "Sensor ID",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 10 },
+              { "color": "orange", "value": 30 }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 3, "w": 4, "x": 8, "y": 6 },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [{ "jsonPath": "$.analyses[0].en_report.generation_time_seconds", "name": "RCA Time", "type": "number" }],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/history"
+        }
+      ],
+      "title": "RCA Generation Time",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 3, "w": 4, "x": 8, "y": 9 },
+      "id": 10,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [{ "jsonPath": "$.analyses[0].anomaly_type", "name": "Anomaly Type", "type": "string" }],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/history"
+        }
+      ],
+      "title": "Anomaly Type",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 6, "w": 8, "x": 12, "y": 6 },
+      "id": 11,
+      "options": {
+        "code": { "language": "plaintext", "showLineNumbers": false, "showMiniMap": false },
+        "content": "## Anomaly Summary\n\nData loaded from `/history` endpoint.\n\nConfigure a **Text** panel with the JSON API datasource to display `$.analyses[0].en_report.anomaly_summary` as Markdown.\n\nSee panel ID 12 for the full RCA report text panel.",
+        "mode": "markdown"
+      },
+      "title": "How to Display LLM Text",
+      "type": "text"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 12 },
+      "id": 102,
+      "title": "AI Root Cause Analysis Report (English)",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "filterable": true,
+            "inspect": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "severity" },
+            "properties": [
+              { "id": "custom.width", "value": 100 },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "yellow", "value": 0.5 },
+                    { "color": "orange", "value": 0.7 },
+                    { "color": "red", "value": 0.8 }
+                  ]
+                }
+              },
+              { "id": "custom.cellOptions", "value": { "type": "color-background" } },
+              { "id": "unit", "value": "percentunit" }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "escalate" },
+            "properties": [
+              { "id": "custom.width", "value": 100 },
+              {
+                "id": "mappings",
+                "value": [
+                  { "options": { "true": { "color": "red", "index": 0, "text": "YES" }, "false": { "color": "green", "index": 1, "text": "NO" } }, "type": "value" }
+                ]
+              },
+              { "id": "custom.cellOptions", "value": { "type": "color-background" } }
+            ]
+          },
+          { "matcher": { "id": "byName", "options": "sensor_id" }, "properties": [{ "id": "custom.width", "value": 120 }] },
+          { "matcher": { "id": "byName", "options": "anomaly_type" }, "properties": [{ "id": "custom.width", "value": 150 }] },
+          { "matcher": { "id": "byName", "options": "timestamp" }, "properties": [{ "id": "custom.width", "value": 200 }] }
+        ]
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 13 },
+      "id": 12,
+      "options": {
+        "cellHeight": "sm",
+        "footer": { "countRows": false, "fields": "", "reducer": ["sum"], "show": false },
+        "showHeader": true,
+        "sortBy": [{ "desc": true, "displayName": "timestamp" }]
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [
+            { "jsonPath": "$.analyses[*].sensor_id", "name": "sensor_id", "type": "string" },
+            { "jsonPath": "$.analyses[*].anomaly_type", "name": "anomaly_type", "type": "string" },
+            { "jsonPath": "$.analyses[*].en_report.severity", "name": "severity", "type": "number" },
+            { "jsonPath": "$.analyses[*].en_report.escalate", "name": "escalate", "type": "string" },
+            { "jsonPath": "$.analyses[*].en_report.anomaly_summary", "name": "anomaly_summary", "type": "string" },
+            { "jsonPath": "$.analyses[*].en_report.root_cause", "name": "root_cause", "type": "string" },
+            { "jsonPath": "$.analyses[*].timestamp", "name": "timestamp", "type": "string" }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/history"
+        }
+      ],
+      "title": "RCA Analysis History",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 21 },
+      "id": 103,
+      "title": "Recommended Actions & Similar Incidents",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "filterable": false,
+            "inspect": false
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 22 },
+      "id": 13,
+      "options": {
+        "cellHeight": "sm",
+        "footer": { "countRows": false, "fields": "", "reducer": ["sum"], "show": false },
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [
+            { "jsonPath": "$.analyses[0].en_report.recommended_actions[*]", "name": "Recommended Actions (Latest)", "type": "string" }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/history"
+        }
+      ],
+      "title": "Recommended Actions (Latest Report)",
+      "type": "table"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "filterable": false,
+            "inspect": false
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 22 },
+      "id": 14,
+      "options": {
+        "cellHeight": "sm",
+        "footer": { "countRows": false, "fields": "", "reducer": ["sum"], "show": false },
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [
+            { "jsonPath": "$.analyses[0].en_report.similar_incidents[*]", "name": "Similar Incidents (Latest)", "type": "string" }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/history"
+        }
+      ],
+      "title": "Similar Incidents (Latest Report)",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 28 },
+      "id": 104,
+      "title": "German Report (DE) - Deutschsprachiger Bericht",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "filterable": true,
+            "inspect": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "severity" },
+            "properties": [
+              { "id": "custom.width", "value": 100 },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "yellow", "value": 0.5 },
+                    { "color": "orange", "value": 0.7 },
+                    { "color": "red", "value": 0.8 }
+                  ]
+                }
+              },
+              { "id": "custom.cellOptions", "value": { "type": "color-background" } },
+              { "id": "unit", "value": "percentunit" }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "escalate" },
+            "properties": [
+              { "id": "custom.width", "value": 110 },
+              {
+                "id": "mappings",
+                "value": [
+                  { "options": { "true": { "color": "red", "index": 0, "text": "JA" }, "false": { "color": "green", "index": 1, "text": "NEIN" } }, "type": "value" }
+                ]
+              },
+              { "id": "custom.cellOptions", "value": { "type": "color-background" } }
+            ]
+          }
+        ]
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 29 },
+      "id": 15,
+      "options": {
+        "cellHeight": "sm",
+        "footer": { "countRows": false, "fields": "", "reducer": ["sum"], "show": false },
+        "showHeader": true,
+        "sortBy": [{ "desc": true, "displayName": "timestamp" }]
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [
+            { "jsonPath": "$.analyses[*].sensor_id", "name": "sensor_id", "type": "string" },
+            { "jsonPath": "$.analyses[*].de_report.severity", "name": "severity", "type": "number" },
+            { "jsonPath": "$.analyses[*].de_report.escalate", "name": "escalate", "type": "string" },
+            { "jsonPath": "$.analyses[*].de_report.anomaly_summary", "name": "Anomalie-Zusammenfassung", "type": "string" },
+            { "jsonPath": "$.analyses[*].de_report.root_cause", "name": "Grundursache", "type": "string" },
+            { "jsonPath": "$.analyses[*].timestamp", "name": "timestamp", "type": "string" }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/history"
+        }
+      ],
+      "title": "DE Analysehistorie (Deutschsprachige Berichte)",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 37 },
+      "id": 105,
+      "title": "Severity Distribution",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineWidth": 1,
+            "scaleDistribution": { "type": "linear" },
+            "thresholdsStyle": { "mode": "off" }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 80 }
+            ]
+          },
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 38 },
+      "id": 16,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": { "mode": "single", "sort": "none" },
+        "xTickLabelRotation": -45,
+        "xTickLabelSpacing": 200
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [
+            { "jsonPath": "$.analyses[*].sensor_id", "name": "Sensor", "type": "string" },
+            { "jsonPath": "$.analyses[*].en_report.severity", "name": "Severity Score", "type": "number" }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/history"
+        }
+      ],
+      "title": "Severity by Sensor",
+      "type": "barchart"
+    },
+    {
+      "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineWidth": 1,
+            "scaleDistribution": { "type": "linear" },
+            "thresholdsStyle": { "mode": "off" }
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 38 },
+      "id": 17,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": { "mode": "single", "sort": "none" },
+        "xTickLabelRotation": -45,
+        "xTickLabelSpacing": 200
+      },
+      "targets": [
+        {
+          "datasource": { "type": "marcusolsson-json-datasource", "uid": "${DS_ANOMALY_API}" },
+          "fields": [
+            { "jsonPath": "$.analyses[*].sensor_id", "name": "Sensor", "type": "string" },
+            { "jsonPath": "$.analyses[*].en_report.generation_time_seconds", "name": "RCA Generation Time (s)", "type": "number" }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/history"
+        }
+      ],
+      "title": "RCA Generation Time by Sensor",
+      "type": "barchart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 46 },
+      "id": 106,
+      "title": "Setup Instructions",
+      "type": "row"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 47 },
+      "id": 18,
+      "options": {
+        "code": { "language": "plaintext", "showLineNumbers": false, "showMiniMap": false },
+        "content": "## Grafana Setup Instructions\n\n### 1. Install JSON API Plugin\n```\ngrafana-cli plugins install marcusolsson-json-datasource\n```\n\n### 2. Add Data Source\n- Go to **Configuration > Data Sources > Add data source**\n- Search for **JSON API**\n- Set URL to `http://localhost:8000` (or your FastAPI host)\n- Name it `Anomaly Detection API`\n- Click **Save & Test**\n\n### 3. Import This Dashboard\n- Go to **Dashboards > Import**\n- Upload this `dashboard.json` file\n- Select the `Anomaly Detection API` datasource when prompted\n\n### 4. Populate History\nRun a simulate call to populate the history panel:\n```bash\ncurl -X POST http://localhost:8000/simulate \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"sensor_id\":\"PUMP_01\",\"anomaly_type\":\"bearing_wear\",\"severity\":0.85,\"language\":\"both\"}'\n```\n\n### 5. Refresh\nSet dashboard refresh to `30s` or `1m` for live monitoring.\n\n### API Endpoints\n| Method | Path | Description |\n|--------|------|-------------|\n| GET | /health | System health (model, PostgreSQL, ChromaDB) |\n| POST | /analyze | Full detection + RCA pipeline |\n| POST | /simulate | Inject synthetic anomaly + RCA (demo) |\n| GET | /history | Last 10 analyses (newest first) |",
+        "mode": "markdown"
+      },
+      "title": "Setup & Usage Guide",
+      "type": "text"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "tags": ["anomaly-detection", "rca", "ai", "manufacturing", "lstm", "langchain"],
+  "templating": { "list": [] },
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "AI Anomaly Detection & RCA Dashboard",
+  "uid": "anomaly-rca-v1",
+  "version": 1,
+  "weekStart": ""
+}

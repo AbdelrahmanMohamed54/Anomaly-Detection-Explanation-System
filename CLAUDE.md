@@ -138,6 +138,16 @@ Commit types: feat / fix / refactor / test / docs / chore
     End-to-end verified: /simulate with real Gemini LLM produced full RCA report
     39/39 tests passing across all sessions
 
-### Session 5 onwards
-13. grafana/dashboard.json — Grafana dashboard configuration
+### Session 5 — COMPLETE
+13. grafana/dashboard.json — Grafana dashboard configuration ✓
+    Panels: System Health (5 stat panels), RCA Analysis History table, DE report table
+    Severity gauge with colour thresholds (green/yellow/orange/red at 0/0.5/0.7/0.8)
+    Escalation indicator, recommended actions + similar incidents tables
+    Bar charts: severity by sensor, RCA generation time by sensor
+    Setup guide text panel with curl examples and datasource config
+    Requires: marcusolsson-json-datasource plugin, FastAPI at localhost:8000
+    Import: Dashboards > Import > upload dashboard.json, select datasource
+    Auto-refresh: 30s; reads /health + /history endpoints
+
+### Session 6 onwards
 14. docker-compose.yml + Dockerfile — containerization
