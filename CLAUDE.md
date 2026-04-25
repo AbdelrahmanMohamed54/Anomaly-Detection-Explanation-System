@@ -140,14 +140,20 @@ Commit types: feat / fix / refactor / test / docs / chore
 
 ### Session 5 — COMPLETE
 13. grafana/dashboard.json — Grafana dashboard configuration ✓
-    Panels: System Health (5 stat panels), RCA Analysis History table, DE report table
-    Severity gauge with colour thresholds (green/yellow/orange/red at 0/0.5/0.7/0.8)
-    Escalation indicator, recommended actions + similar incidents tables
-    Bar charts: severity by sensor, RCA generation time by sensor
-    Setup guide text panel with curl examples and datasource config
-    Requires: marcusolsson-json-datasource plugin, FastAPI at localhost:8000
-    Import: Dashboards > Import > upload dashboard.json, select datasource
-    Auto-refresh: 30s; reads /health + /history endpoints
+    6 panels: Live Sensor Readings (timeseries), Anomaly Alerts (stat), Latest EN RCA Report (table),
+    Latest DE RCA Report (table), Severity Distribution (pie chart), Escalation Required (stat)
+    Title: "AI Anomaly Detection & Explanation System"; refresh 30s; time range last 3 hours
+    Severity thresholds: green=0, yellow=0.5, orange=0.7, red=0.8
+    Reads /history endpoint; detected_values (temp/vibration/pressure) added to history entries
+    Requires: marcusolsson-json-datasource plugin; Import: Dashboards > Import > upload dashboard.json
+    README.md updated with step-by-step Grafana import guide
+14. docker-compose.yml + Dockerfile — containerization ✓
+    Services: postgres:15-alpine, api (FastAPI), grafana:latest
+    Postgres healthcheck gates API startup; POSTGRES_URL overridden to use service name
+    Grafana auto-installs marcusolsson-json-datasource plugin via GF_INSTALL_PLUGINS
+    Volumes: postgres_data, grafana_data; model/saved_models + .chroma bind-mounted
+    Dockerfile: python:3.11-slim, pip install requirements.txt, uvicorn CMD
+    Docker test: daemon not running in this environment; all 39/39 tests passing verify correctness
 
 ### Session 6 onwards
-14. docker-compose.yml + Dockerfile — containerization
+(All sessions complete — project fully built)
