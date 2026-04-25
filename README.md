@@ -196,7 +196,22 @@ python model/train.py --data data/sensor_data/ --epochs 50 --model lstm
 
 ### Import Grafana dashboard
 
-In Grafana → Dashboards → Import → Upload `grafana/dashboard.json`
+1. Install the JSON API plugin (if not already installed):
+   ```bash
+   grafana-cli plugins install marcusolsson-json-datasource
+   ```
+2. Go to **Configuration > Data Sources > Add data source**, search **JSON API**
+3. Set URL to `http://localhost:8000`, name it `Anomaly Detection API`, click **Save & Test**
+4. Go to **Dashboards > Import > Upload dashboard JSON file**
+5. Select `grafana/dashboard.json` and map the datasource to `Anomaly Detection API`
+6. Click **Import** — the dashboard auto-refreshes every 30 seconds
+
+Populate the history panels by running a simulate call first:
+```bash
+curl -X POST http://localhost:8000/simulate \
+  -H "Content-Type: application/json" \
+  -d '{"sensor_id":"PUMP_01","anomaly_type":"bearing_wear","severity":0.85,"language":"both"}'
+```
 
 ---
 

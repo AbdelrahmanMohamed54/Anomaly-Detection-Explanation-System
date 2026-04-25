@@ -324,6 +324,8 @@ async def analyze(request: AnalyzeRequest) -> dict[str, Any]:
     result["sensor_id"] = request.sensor_id
     result["anomaly_type"] = request.anomaly_type
     result["timestamp"] = datetime.utcnow().isoformat()
+    result["detected_values"] = anomaly.detected_values
+    result["severity_label"] = severity_label(anomaly.severity)
 
     _record_history(result)
     return result
@@ -358,6 +360,8 @@ async def simulate(request: SimulateRequest) -> dict[str, Any]:
     result["sensor_id"] = request.sensor_id
     result["anomaly_type"] = request.anomaly_type
     result["timestamp"] = datetime.utcnow().isoformat()
+    result["detected_values"] = anomaly.detected_values
+    result["severity_label"] = severity_label(anomaly.severity)
 
     _record_history(result)
     return result
