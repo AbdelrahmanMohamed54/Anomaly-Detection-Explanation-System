@@ -7,3 +7,4 @@ __pycache__/
 .DS_Store
 model/saved_models/
 data/raw/
+data/demo_reports/

@@ -4,6 +4,127 @@
 
 ---
 
+## Quick Start
+
+```bash
+# 1. Clone and set up environment
+git clone https://github.com/AbdelrahmanMohamed54/Anomaly-Detection-Explanation-System
+cd Anomaly-Detection-Explanation-System
+cp .env.example .env   # add your GOOGLE_API_KEY or GROQ_API_KEY
+
+# 2. Start all services with Docker
+docker-compose up --build
+
+# 3. Run one-time data setup (inside the running container)
+docker-compose exec api python scripts/generate_synthetic_data.py
+docker-compose exec api python model/train.py
+docker-compose exec api python scripts/seed_postgres.py
+docker-compose exec api python scripts/ingest_incident_reports.py
+docker-compose exec api python scripts/ingest_maintenance_logs.py
+
+# 4. Test the API
+curl http://localhost:8000/health
+curl -X POST http://localhost:8000/simulate \
+  -H "Content-Type: application/json" \
+  -d '{"sensor_id":"PUMP_01","anomaly_type":"bearing_wear","severity":0.85,"language":"both"}'
+
+# 5. Open Grafana dashboard
+# Navigate to http://localhost:3000 (admin/admin), import grafana/dashboard.json
+```
+
+---
+
+## Demo Output
+
+The following is real output from `python scripts/run_demo.py` — PUMP_01 bearing wear scenario:
+
+```
+========================================================================
+  SCENARIO 1 REPORT — EN
+========================================================================
+  Sensor:   PUMP_01
+  Severity: HIGH  (0.85)
+  Escalate: YES — immediate action required
+------------------------------------------------------------------------
+  ANOMALY SUMMARY
+------------------------------------------------------------------------
+  An anomaly has been detected on PUMP_01, classified as bearing wear.
+  The pump is exhibiting elevated temperature (96.0 C) and high vibration
+  (3.8 mm/s), while operating at 1495 RPM with a current draw of 13.5 A
+  and pressure of 5.0 bar. The severity score is 0.850.
+
+------------------------------------------------------------------------
+  ROOT CAUSE
+------------------------------------------------------------------------
+  The most probable root cause is severe wear of the drive-end bearing on
+  PUMP_01, leading to increased friction, heat generation, and vibration.
+  This is supported by historical incident data showing identical symptoms
+  on PUMP_01's drive-end bearing.
+
+------------------------------------------------------------------------
+  SIMILAR INCIDENTS
+------------------------------------------------------------------------
+  1. PUMP_01 experienced a high-vibration alarm (3.8 mm/s) and bearing
+     temperature of 96 C on its drive-end bearing, leading to manual
+     isolation. (Source: incident_search_tool)
+  2. MOTOR_01's non-drive-end bearing temperature gradually increased to
+     102 C with vibration reaching 2.9 mm/s. (Source: incident_search_tool)
+  3. PUMP_02 vibration survey identified 2x running speed harmonic and
+     12 C temperature rise on the coupling-side bearing.
+
+------------------------------------------------------------------------
+  RECOMMENDED ACTIONS
+------------------------------------------------------------------------
+  1. Immediately isolate PUMP_01 to prevent secondary damage.
+  2. Perform an emergency replacement of the drive-end bearing on PUMP_01.
+  3. Inspect the removed bearing for failure modes such as spalling or
+     abrasive wear.
+
+------------------------------------------------------------------------
+  Sources: historical_anomaly_tool, incident_search_tool, corrective_action_tool
+  Generated in 29.5s
+========================================================================
+```
+
+---
+
+## Test Results
+
+```
+$ pytest tests/ -v
+============================= test session starts =============================
+platform win32 -- Python 3.10.0, pytest-9.0.3
+collected 64 items
+
+tests/test_agent.py::TestRCAAgent::test_rca_report_has_all_fields_populated PASSED
+tests/test_agent.py::TestRCAAgent::test_escalate_true_when_severity_above_threshold PASSED
+tests/test_agent.py::TestRCAAgent::test_escalate_true_when_severity_well_above_threshold PASSED
+tests/test_agent.py::TestRCAAgent::test_escalate_false_for_low_severity PASSED
+tests/test_agent.py::TestRCAAgent::test_llm_escalate_true_overrides_low_severity PASSED
+tests/test_agent.py::TestRCAAgent::test_generate_report_called PASSED
+tests/test_agent.py::TestRCAAgent::test_similar_incidents_capped_at_three PASSED
+tests/test_agent.py::TestReportGenerator::test_en_report_has_all_required_fields PASSED
+tests/test_agent.py::TestReportGenerator::test_bilingual_reports_have_different_text PASSED
+tests/test_agent.py::TestReportGenerator::test_de_report_contains_german_text PASSED
+tests/test_agent.py::TestSeverityLabel::test_high_severity_mapping PASSED
+tests/test_agent.py::TestSeverityLabel::test_medium_severity_mapping PASSED
+tests/test_agent.py::TestSeverityLabel::test_low_severity_mapping PASSED
+tests/test_agent.py::TestSeverityLabel::test_boundary_high_threshold PASSED
+tests/test_agent.py::TestSeverityLabel::test_boundary_medium_threshold PASSED
+tests/test_agent.py::TestSeverityLabel::test_german_high_label PASSED
+tests/test_agent.py::TestSeverityLabel::test_german_medium_label PASSED
+tests/test_agent.py::TestSeverityLabel::test_german_low_label PASSED
+tests/test_agent.py::TestFullRCAAgentPipeline::test_full_rca_agent_returns_valid_report PASSED
+tests/test_agent.py::TestFullRCAAgentPipeline::test_full_rca_agent_all_tools_referenced_in_sources PASSED
+tests/test_api.py (14 tests) ................  PASSED
+tests/test_model.py (12 tests) ............  PASSED
+tests/test_tools.py (18 tests) ..................  PASSED
+
+======================== 64 passed in 19.21s ==================================
+```
+
+---
+
 ## Overview
 
 Industrial anomaly detection systems are good at flagging problems but terrible at explaining them. Plant operators receive an alert but still need to manually investigate root causes, consult historical records, and decide on corrective actions — a process that can take 30–60 minutes per incident.

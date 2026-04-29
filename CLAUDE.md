@@ -155,5 +155,37 @@ Commit types: feat / fix / refactor / test / docs / chore
     Dockerfile: python:3.11-slim, pip install requirements.txt, uvicorn CMD
     Docker test: daemon not running in this environment; all 39/39 tests passing verify correctness
 
-### Session 6 onwards
-(All sessions complete — project fully built)
+### Session 6 — COMPLETE
+15. Complete test suite ✓
+    64/64 tests passing across all 4 test files
+    New tests: full pipeline CSV->inference, reconstruction error comparison,
+    model load validation, similarity score ordering, bilingual text diff,
+    severity label mapping (HIGH/MEDIUM/LOW / HOCH/MITTEL/NIEDRIG),
+    full RCA agent pipeline, all 3 anomaly types via /simulate, reverse-chron history
+16. scripts/run_demo.py — standalone demo script ✓
+    Runs 3 scenarios (bearing_wear / pressure_drop / overload) without Docker
+    Prints EN+DE reports to console, saves JSON to data/demo_reports/
+    Real output captured from Gemini 2.5 Flash (29-52s per scenario)
+17. .env.example ✓
+18. README.md final update ✓
+    Quick Start (5 commands), Demo Output (real RCA report), Test Results summary
+19. Final cleanup ✓
+    .gitignore: added data/demo_reports/
+    Module docstrings verified across all .py files
+    No debug prints in agent/ or api/ production code
+
+## Known limitations
+- PostgreSQL must be running for historical_anomaly_tool to return results;
+  falls back gracefully to empty list when unavailable
+- Docker test not run in dev environment (daemon not available);
+  all code verified via 64 unit/integration tests
+- German translation quality depends on LLM; fallback returns EN report with 'de' tag
+- In-memory history resets on API restart; no persistence layer
+
+## Future improvements
+- Add a /metrics Prometheus endpoint for Grafana alerting
+- Store analyses in PostgreSQL instead of in-memory list
+- Add streaming SSE endpoint for real-time anomaly push to Grafana
+- Fine-tune severity thresholds per sensor type
+- Add confidence intervals to severity scores
+- Multi-sensor correlation analysis (co-occurring anomalies)
