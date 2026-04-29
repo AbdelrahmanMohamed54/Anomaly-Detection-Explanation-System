@@ -287,6 +287,33 @@ class TestReportGenerator:
         assert isinstance(result.escalate, bool)
         assert result.generation_time_seconds >= 0.0
 
+    def test_bilingual_reports_have_different_text(self) -> None:
+        """EN and DE reports must have different anomaly_summary text."""
+        en_report = _make_en_report()
+        rca_result = en_report.model_dump()
+
+        german_fields = _TranslatedFields(
+            anomaly_summary="Das Lager zeigt erhoehte Schwingungen.",
+            root_cause="Schmierstoffversagen durch verpasstes Nachschmierintervall.",
+            similar_incidents=["INC-2024-0312: Lagerschaden behoben."],
+            recommended_actions=["Lager unter Erlaubnisschein isolieren."],
+        )
+
+        mock_chain = MagicMock()
+        mock_chain.ainvoke = AsyncMock(return_value=german_fields)
+        mock_llm = MagicMock()
+        mock_llm.with_structured_output.return_value = mock_chain
+
+        with patch.object(ReportGenerator, "_build_llm", return_value=mock_llm):
+            gen = ReportGenerator()
+            de_report: RCAReport = asyncio.run(gen.generate(rca_result, language="DE"))
+
+        assert en_report.anomaly_summary != de_report.anomaly_summary, (
+            "EN and DE anomaly_summary must differ"
+        )
+        assert de_report.language == "de"
+        assert en_report.language == "en"
+
     def test_de_report_contains_german_text(self) -> None:
         """generate(language='DE') must return a report with German-language content."""
         en_report = _make_en_report()
@@ -344,3 +371,99 @@ class TestReportGenerator:
         assert de_report.sensor_id == en_report.sensor_id
         assert de_report.severity == en_report.severity
         assert de_report.escalate == en_report.escalate
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TestSeverityLabel — severity_label() mapping
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+class TestSeverityLabel:
+    """Tests for the severity_label() helper in report_generator."""
+
+    def test_high_severity_mapping(self) -> None:
+        """Float 0.9 must map to 'HIGH' in English."""
+        from agent.report_generator import severity_label
+        assert severity_label(0.9) == "HIGH"
+
+    def test_medium_severity_mapping(self) -> None:
+        """Float 0.5 must map to 'MEDIUM' in English."""
+        from agent.report_generator import severity_label
+        assert severity_label(0.5) == "MEDIUM"
+
+    def test_low_severity_mapping(self) -> None:
+        """Float 0.2 must map to 'LOW' in English."""
+        from agent.report_generator import severity_label
+        assert severity_label(0.2) == "LOW"
+
+    def test_boundary_high_threshold(self) -> None:
+        """Exactly 0.8 must be 'HIGH'; just below 0.8 must be 'MEDIUM'."""
+        from agent.report_generator import severity_label
+        assert severity_label(0.8) == "HIGH"
+        assert severity_label(0.799) == "MEDIUM"
+
+    def test_boundary_medium_threshold(self) -> None:
+        """Exactly 0.5 must be 'MEDIUM'; just below 0.5 must be 'LOW'."""
+        from agent.report_generator import severity_label
+        assert severity_label(0.5) == "MEDIUM"
+        assert severity_label(0.499) == "LOW"
+
+    def test_german_high_label(self) -> None:
+        """severity_label(0.9, 'de') must return 'HOCH'."""
+        from agent.report_generator import severity_label
+        assert severity_label(0.9, "de") == "HOCH"
+
+    def test_german_medium_label(self) -> None:
+        """severity_label(0.6, 'de') must return 'MITTEL'."""
+        from agent.report_generator import severity_label
+        assert severity_label(0.6, "de") == "MITTEL"
+
+    def test_german_low_label(self) -> None:
+        """severity_label(0.1, 'de') must return 'NIEDRIG'."""
+        from agent.report_generator import severity_label
+        assert severity_label(0.1, "de") == "NIEDRIG"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TestFullRCAAgentPipeline — all 3 tools mocked, valid RCAReport returned
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+class TestFullRCAAgentPipeline:
+    """Verify the full analyze() path with all three tools mocked."""
+
+    def test_full_rca_agent_returns_valid_report(self) -> None:
+        """Full RCAAgent.analyze() with all tools mocked must return RCAReport."""
+        structured = _make_structured_output(escalate=False)
+        anomaly = _make_anomaly(sensor_id="PUMP_01", severity=0.72)
+
+        with _patch_build_llm(), _patch_create_agent(), _patch_run_agent(structured):
+            agent = RCAAgent()
+            report: RCAReport = asyncio.run(agent.analyze(anomaly))
+
+        assert isinstance(report, RCAReport)
+        assert report.sensor_id == "PUMP_01"
+        assert report.anomaly_summary, "anomaly_summary must not be empty"
+        assert report.root_cause, "root_cause must not be empty"
+        assert len(report.similar_incidents) >= 1
+        assert len(report.recommended_actions) >= 1
+        assert report.sources, "sources must reference at least one tool"
+        assert report.generation_time_seconds >= 0.0
+
+    def test_full_rca_agent_all_tools_referenced_in_sources(self) -> None:
+        """RCAReport.sources must include all three expected tool names."""
+        structured = _make_structured_output(escalate=False)
+        anomaly = _make_anomaly(sensor_id="MOTOR_01", severity=0.65)
+
+        with _patch_build_llm(), _patch_create_agent(), _patch_run_agent(structured):
+            agent = RCAAgent()
+            report: RCAReport = asyncio.run(agent.analyze(anomaly))
+
+        expected_tools = {
+            "historical_anomaly_tool",
+            "incident_search_tool",
+            "corrective_action_tool",
+        }
+        assert expected_tools.issubset(set(report.sources)), (
+            f"Expected all 3 tool names in sources. Got: {report.sources}"
+        )

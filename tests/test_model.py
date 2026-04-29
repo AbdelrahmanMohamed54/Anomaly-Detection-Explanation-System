@@ -183,3 +183,59 @@ class TestAnomalyDetector:
         assert result.severity > 0.5, (
             f"Expected severity > 0.5, got {result.severity}"
         )
+
+    def test_model_loads_from_saved_models_directory(self) -> None:
+        """AnomalyDetector must load successfully from model/saved_models/."""
+        from model.anomaly_detector import AnomalyDetector, MODEL_PATH, SCALER_PATH, THRESHOLD_PATH
+
+        assert MODEL_PATH.exists(), f"Model file missing: {MODEL_PATH}"
+        assert SCALER_PATH.exists(), f"Scaler file missing: {SCALER_PATH}"
+        assert THRESHOLD_PATH.exists(), f"Threshold file missing: {THRESHOLD_PATH}"
+
+        detector = AnomalyDetector()
+        assert detector.model is not None, "Loaded model must not be None"
+        assert detector.scaler is not None, "Loaded scaler must not be None"
+        assert detector.threshold > 0.0, "Threshold must be positive"
+
+    def test_anomaly_reconstruction_error_exceeds_normal(self) -> None:
+        """Mean reconstruction error on anomaly windows must exceed normal windows."""
+        from model.anomaly_detector import AnomalyDetector
+        from model.data_preprocessing import load_sensor_data, normalize_data, create_windows
+
+        detector = AnomalyDetector()
+
+        normal_df = load_sensor_data("data/sensor_data/normal_data.csv")
+        anomaly_df = load_sensor_data("data/sensor_data/anomaly_data.csv")
+
+        normal_scaled, _ = normalize_data(normal_df, scaler=detector.scaler)
+        anomaly_scaled, _ = normalize_data(anomaly_df, scaler=detector.scaler)
+
+        normal_windows = create_windows(normal_scaled, window_size=50)[:50]
+        anomaly_windows = create_windows(anomaly_scaled, window_size=50)[:50]
+
+        normal_errors = detector.get_reconstruction_error(normal_windows)
+        anomaly_errors = detector.get_reconstruction_error(anomaly_windows)
+
+        assert anomaly_errors.mean() > normal_errors.mean(), (
+            f"Anomaly mean error {anomaly_errors.mean():.6f} must exceed "
+            f"normal mean error {normal_errors.mean():.6f}"
+        )
+
+    def test_full_pipeline_csv_to_inference(self) -> None:
+        """End-to-end: raw CSV -> preprocessed windows -> model inference produces a result."""
+        from model.anomaly_detector import AnomalyDetector, WINDOW_SIZE
+        from model.data_preprocessing import load_sensor_data
+
+        detector = AnomalyDetector()
+        df = load_sensor_data("data/sensor_data/normal_data.csv")
+
+        readings = df.head(WINDOW_SIZE).to_dict(orient="records")
+        for i, r in enumerate(readings):
+            r.setdefault("sensor_id", "PUMP_01")
+            r.setdefault("timestamp", str(pd.Timestamp("2024-01-01") + pd.Timedelta(minutes=i)))
+
+        result = detector.detect(readings)
+        # Normal data may return None (no anomaly) — that's correct behaviour
+        assert result is None or hasattr(result, "severity"), (
+            "detect() must return None or an AnomalyEvent"
+        )

@@ -362,3 +362,173 @@ class TestHistoryEndpoint:
         assert response.status_code == 200
         data = response.json()
         assert data["count"] >= 1, "History must have at least 1 entry after simulate"
+
+    def test_history_reverse_chronological_order(self) -> None:
+        """GET /history must return analyses newest-first."""
+        import api.main as main_module
+
+        history_store: list = []
+        en_report_1 = _make_rca_report(sensor_id="PUMP_01")
+        en_report_2 = _make_rca_report(sensor_id="MOTOR_01")
+        de_report_1 = _make_de_report(en_report_1)
+        de_report_2 = _make_de_report(en_report_2)
+
+        mock_agent = MagicMock()
+        mock_report_gen = MagicMock()
+        mock_report_gen.generate = AsyncMock(side_effect=[de_report_1, de_report_2])
+        mock_report_gen.generate_bilingual = AsyncMock(
+            side_effect=[(en_report_1, de_report_1), (en_report_2, de_report_2)]
+        )
+
+        with (
+            patch.object(main_module, "_detector", MagicMock()),
+            patch.object(main_module, "_rca_agent", mock_agent),
+            patch.object(main_module, "_report_gen", mock_report_gen),
+            patch.object(main_module, "_analysis_history", history_store),
+        ):
+            from api.main import app
+            client = TestClient(app)
+
+            mock_agent.analyze = AsyncMock(return_value=en_report_1)
+            client.post("/simulate", json={
+                "sensor_id": "PUMP_01", "anomaly_type": "bearing_wear",
+                "severity": 0.7, "language": "en"
+            })
+            mock_agent.analyze = AsyncMock(return_value=en_report_2)
+            client.post("/simulate", json={
+                "sensor_id": "MOTOR_01", "anomaly_type": "overload",
+                "severity": 0.6, "language": "en"
+            })
+
+            response = client.get("/history")
+
+        assert response.status_code == 200
+        analyses = response.json()["analyses"]
+        assert len(analyses) >= 2
+        # Most recent simulate (MOTOR_01) must appear first
+        assert analyses[0]["sensor_id"] == "MOTOR_01", (
+            "Newest entry (MOTOR_01) must be first in reverse chronological order"
+        )
+
+
+class TestAnalyzeEndpoint:
+    """Tests for POST /analyze."""
+
+    def test_analyze_with_sensor_id_returns_200(self) -> None:
+        """POST /analyze with valid sensor_id must return 200 and en_report."""
+        import api.main as main_module
+
+        en_report = _make_rca_report(sensor_id="PUMP_03", severity=0.75)
+        de_report = _make_de_report(en_report)
+
+        mock_agent = MagicMock()
+        mock_agent.analyze = AsyncMock(return_value=en_report)
+        mock_report_gen = MagicMock()
+        mock_report_gen.generate = AsyncMock(return_value=de_report)
+        mock_report_gen.generate_bilingual = AsyncMock(return_value=(en_report, de_report))
+
+        with (
+            patch.object(main_module, "_detector", MagicMock()),
+            patch.object(main_module, "_rca_agent", mock_agent),
+            patch.object(main_module, "_report_gen", mock_report_gen),
+            patch.object(main_module, "_analysis_history", []),
+        ):
+            from api.main import app
+            client = TestClient(app)
+            response = client.post(
+                "/analyze",
+                json={
+                    "sensor_id": "PUMP_03",
+                    "anomaly_type": "bearing_wear",
+                    "severity": 0.75,
+                    "language": "en",
+                },
+            )
+
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.text}"
+        data = response.json()
+        assert "en_report" in data, "Response must have en_report"
+        assert data["en_report"]["sensor_id"] == "PUMP_03"
+
+    def test_analyze_response_includes_sensor_metadata(self) -> None:
+        """POST /analyze response must echo back sensor_id, anomaly_type, timestamp."""
+        import api.main as main_module
+
+        en_report = _make_rca_report(sensor_id="PUMP_01")
+        de_report = _make_de_report(en_report)
+
+        mock_agent = MagicMock()
+        mock_agent.analyze = AsyncMock(return_value=en_report)
+        mock_report_gen = MagicMock()
+        mock_report_gen.generate_bilingual = AsyncMock(return_value=(en_report, de_report))
+
+        with (
+            patch.object(main_module, "_detector", MagicMock()),
+            patch.object(main_module, "_rca_agent", mock_agent),
+            patch.object(main_module, "_report_gen", mock_report_gen),
+            patch.object(main_module, "_analysis_history", []),
+        ):
+            from api.main import app
+            client = TestClient(app)
+            response = client.post(
+                "/analyze",
+                json={
+                    "sensor_id": "PUMP_01",
+                    "anomaly_type": "bearing_wear",
+                    "severity": 0.7,
+                    "language": "both",
+                },
+            )
+
+        data = response.json()
+        assert data["sensor_id"] == "PUMP_01"
+        assert data["anomaly_type"] == "bearing_wear"
+        assert "timestamp" in data
+        assert "analysis_time_seconds" in data
+
+
+class TestSimulateAllAnomalyTypes:
+    """Test /simulate endpoint with all supported anomaly types."""
+
+    def _run_simulate(self, anomaly_type: str) -> dict:
+        import api.main as main_module
+
+        severity = 0.75
+        en_report = _make_rca_report(sensor_id="PUMP_01", anomaly_type=anomaly_type, severity=severity)
+        de_report = _make_de_report(en_report)
+
+        mock_agent = MagicMock()
+        mock_agent.analyze = AsyncMock(return_value=en_report)
+        mock_report_gen = MagicMock()
+        mock_report_gen.generate = AsyncMock(return_value=de_report)
+        mock_report_gen.generate_bilingual = AsyncMock(return_value=(en_report, de_report))
+
+        with (
+            patch.object(main_module, "_detector", MagicMock()),
+            patch.object(main_module, "_rca_agent", mock_agent),
+            patch.object(main_module, "_report_gen", mock_report_gen),
+            patch.object(main_module, "_analysis_history", []),
+        ):
+            from api.main import app
+            client = TestClient(app)
+            response = client.post(
+                "/simulate",
+                json={"sensor_id": "PUMP_01", "anomaly_type": anomaly_type, "severity": severity, "language": "en"},
+            )
+        assert response.status_code == 200, f"Failed for anomaly_type={anomaly_type}: {response.text}"
+        return response.json()
+
+    def test_simulate_bearing_wear(self) -> None:
+        """POST /simulate with anomaly_type='bearing_wear' must return 200."""
+        data = self._run_simulate("bearing_wear")
+        assert "en_report" in data
+
+    def test_simulate_pressure_drop(self) -> None:
+        """POST /simulate with anomaly_type='pressure_drop' must return 200."""
+        data = self._run_simulate("pressure_drop")
+        assert "en_report" in data
+
+    def test_simulate_overload(self) -> None:
+        """POST /simulate with anomaly_type='overload' must return 200."""
+        data = self._run_simulate("overload")
+        assert "en_report" in data

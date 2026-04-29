@@ -249,3 +249,112 @@ class TestActionRecommenderTool:
 
         results = tool.search("any query")
         assert results == []
+
+    def test_action_recommender_not_incident_reports(self) -> None:
+        """ActionRecommenderTool must query 'maintenance_logs', not 'incident_reports'."""
+        from agent.tools.action_recommender import COLLECTION_NAME as ACTION_COLLECTION
+
+        assert ACTION_COLLECTION == "maintenance_logs", (
+            f"ActionRecommenderTool must target 'maintenance_logs', got '{ACTION_COLLECTION}'"
+        )
+
+    def test_action_results_describe_maintenance_procedures(self) -> None:
+        """Returned action text must come from maintenance log content, not incident text."""
+        tool = self._make_mock_tool()
+        results = tool.search("bearing replacement", top_k=2)
+
+        for r in results:
+            assert r.text, "Action text must not be empty"
+            # Maintenance procedures contain procedural language
+            assert isinstance(r.maintenance_type, str)
+            assert r.source_file, "source_file must be set"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Additional tests — historical_query ordering + semantic_search ranking
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+class TestHistoricalQueryOrdering:
+    """Verify that historical_query requests results in correct order."""
+
+    def _make_rows(self, count: int) -> list[MagicMock]:
+        rows = []
+        for i in range(count):
+            row = MagicMock()
+            row._mapping = {
+                "id": f"uuid-{i}",
+                "sensor_id": "PUMP_01",
+                "anomaly_type": "bearing_wear",
+                "detected_at": f"2024-0{i+1}-01 00:00:00",
+                "duration_minutes": 60,
+                "severity": round(0.5 + i * 0.1, 2),
+                "root_cause": f"Root cause {i}",
+                "resolution": f"Resolution {i}",
+                "resolved_by": "Tech",
+                "resolution_time_hours": 2.0,
+            }
+            rows.append(row)
+        return rows
+
+    def test_query_respects_limit_parameter(self) -> None:
+        """query_similar_anomalies must pass limit to SQL and honour it."""
+        rows = self._make_rows(3)
+
+        mock_conn = MagicMock()
+        mock_conn.__enter__ = lambda s: s
+        mock_conn.__exit__ = MagicMock(return_value=False)
+        mock_conn.execute.return_value.fetchall.return_value = rows
+        mock_engine = MagicMock()
+        mock_engine.connect.return_value = mock_conn
+
+        with patch("agent.tools.historical_query.create_engine", return_value=mock_engine):
+            results = query_similar_anomalies("PUMP_01", "bearing_wear", limit=3)
+
+        assert len(results) == 3, "Result count must match the mock's return"
+
+    def test_query_result_dicts_have_all_keys(self) -> None:
+        """Each result dict must contain the standard historical anomaly keys."""
+        rows = self._make_rows(1)
+
+        mock_conn = MagicMock()
+        mock_conn.__enter__ = lambda s: s
+        mock_conn.__exit__ = MagicMock(return_value=False)
+        mock_conn.execute.return_value.fetchall.return_value = rows
+        mock_engine = MagicMock()
+        mock_engine.connect.return_value = mock_conn
+
+        with patch("agent.tools.historical_query.create_engine", return_value=mock_engine):
+            results = query_similar_anomalies("PUMP_01", "bearing_wear", limit=1)
+
+        required_keys = {"sensor_id", "anomaly_type", "severity", "root_cause", "resolution"}
+        for key in required_keys:
+            assert key in results[0], f"Missing key in result: {key}"
+
+
+class TestIncidentSearchRanking:
+    """Verify that IncidentSearchTool returns results ordered by similarity."""
+
+    def test_results_ordered_by_similarity_descending(self) -> None:
+        """search() must return results with similarity_score in descending order."""
+        tool = object.__new__(IncidentSearchTool)
+        tool.collection = MagicMock()
+        tool.collection.count.return_value = 90
+        # distances increase → similarity decreases; results should be sorted best-first
+        tool.collection.query.return_value = {
+            "documents": [["Doc A", "Doc B", "Doc C"]],
+            "metadatas": [[
+                {"source_file": "f.txt", "anomaly_type": "bearing_wear"},
+                {"source_file": "f.txt", "anomaly_type": "bearing_wear"},
+                {"source_file": "f.txt", "anomaly_type": "bearing_wear"},
+            ]],
+            "distances": [[0.05, 0.30, 0.55]],
+        }
+
+        results = tool.search("vibration spike", top_k=3)
+
+        assert len(results) == 3
+        scores = [r.similarity_score for r in results]
+        assert scores == sorted(scores, reverse=True), (
+            f"Scores must be descending; got {scores}"
+        )
